@@ -1,0 +1,2232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deep Forensics — AI Image Forgery Detection</title>
+  <meta name="description" content="Enterprise-grade copy-move forgery detection using advanced CV algorithms." />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.min.css" />
+  <script src="https://unpkg.com/cropperjs"></script>
+  <style>
+    :root,
+    [data-theme="dark"] {
+      --bg: #0a0e27;
+      --surface: #10142f;
+      --card: #151d3f;
+      --border: #2d3a5c;
+      --accent: #00d9ff;
+      --accent2: #ff0055;
+      --accent3: #ffd700;
+      --text: #e5e7eb;
+      --text-dim: #9ca3af;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --sans: 'Inter', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --surface: #f9fafb;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --accent: #0066cc;
+      --accent2: #dc2626;
+      --accent3: #d97706;
+      --text: #111827;
+      --text-dim: #6b7280;
+      --success: #059669;
+      --warning: #d97706;
+      --danger: #dc2626;
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg) 0%, var(--surface) 100%);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+      transition: background 0.3s;
+    }
+
+    /* Smooth scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--surface);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: linear-gradient(180deg, var(--surface), transparent);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -1px;
+    }
+
+    .logo-icon {
+      font-size: 2rem;
+      -webkit-text-fill-color: initial;
+      background: none;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-left: auto;
+    }
+
+    .theme-toggle,
+    .api-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 1.1rem;
+    }
+
+    .theme-toggle:hover,
+    .api-btn:hover {
+      border-color: var(--accent);
+      background: var(--surface);
+    }
+
+    /* Main */
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      letter-spacing: 0.05em;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.25rem;
+      border: none;
+      background: transparent;
+      color: var(--text-dim);
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1rem;
+      padding-bottom: 1.75rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--accent);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      background: linear-gradient(180deg, rgba(0, 217, 255, 0.1), transparent);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Card */
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .panel:hover {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, var(--card), rgba(0, 217, 255, 0.05));
+    }
+
+    .panel-title {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Upload Zone */
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.05), rgba(255, 0, 85, 0.03));
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragging {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(255, 0, 85, 0.05));
+      transform: translateY(-2px);
+    }
+
+    .drop-zone h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 1rem 0 0.5rem;
+    }
+
+    .drop-zone p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+
+    .drop-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Form Elements */
+    .option-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .option-group label {
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .option-group select,
+    .option-group input {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .option-group select:focus,
+    .option-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #000;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 217, 255, 0.3);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Results */
+    .result-container {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .verdict-banner {
+      padding: 1.5rem;
+      border-radius: 12px;
+      border-left: 4px solid;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .verdict-banner.forged {
+      background: linear-gradient(135deg, rgba(255, 0, 85, 0.1), rgba(255, 100, 120, 0.05));
+      border-left-color: var(--accent2);
+    }
+
+    .verdict-banner.authentic {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(100, 200, 150, 0.05));
+      border-left-color: var(--success);
+    }
+
+    .verdict-icon {
+      font-size: 2.5rem;
+    }
+
+    .verdict-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .verdict-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-card {
+      background: var(--surface);
+      padding: 1.25rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .metric-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .metric-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0.5rem 0;
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    /* Comparison Grid */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .img-container {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .img-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), transparent);
+      color: #fff;
+      font-weight: 600;
+      z-index: 10;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+    }
+
+    .img-container img {
+      width: 100%;
+      height: auto;
+      cursor: zoom-in;
+      transition: transform 0.2s;
+    }
+
+    .img-container img:hover {
+      transform: scale(1.02);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal.active {
+      display: flex;
+      animation: fadeIn 0.3s;
+    }
+
+    .modal img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* Canvas for annotations */
+    #annotationCanvas {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: crosshair;
+      display: block;
+      margin: 1rem 0;
+    }
+
+    /* Performance Dashboard */
+    .perf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .perf-card {
+      background: linear-gradient(135deg, var(--surface), var(--card));
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .perf-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .perf-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-top: 0.5rem;
+    }
+
+    /* Loading */
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spinAnim 0.8s linear infinite;
+      margin: 2rem auto;
+    }
+
+    @keyframes spinAnim {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      main {
+        padding: 1rem;
+      }
+
+      .panel {
+        padding: 1.5rem;
+      }
+
+      .tabs {
+        gap: 0.25rem;
+      }
+
+      .tab-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+      }
+
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header-inner {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+    }
+
+    /* Animations */
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .panel {
+      animation: slideUp 0.6s ease-out;
+    }
+    /* Particle cursor canvas */
+    #cursorCanvas {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0.48; /* fade level reduced */
+      transition: opacity 220ms ease;
+    }
+
+    /* Annotation Tool Buttons */
+    .tool-btn {
+      padding: 0.6rem 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      font-family: var(--sans);
+    }
+
+    .tool-btn:hover {
+      background: var(--surface);
+      border-color: var(--accent);
+    }
+
+    .tool-btn.active {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    #annotationCanvas {
+      max-width: 100%;
+      border-radius: 6px;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Cursor particle canvas -->
+  <canvas id="cursorCanvas" aria-hidden="true"></canvas>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">🔬</span>
+        <span>Deep Forensics</span>
+      </div>
+      <div class="header-actions">
+        <span style="color:var(--text-dim);font-size:0.9rem;margin-right:1rem">Logged in as <strong>{{
+            current_user.username }}</strong></span>
+        <a href="/logout" class="btn btn-secondary" style="padding:0.5rem 1rem;font-size:0.8rem">Logout</a>
+        <button class="api-btn" title="API Docs" onclick="showAPIGuide()">API</button>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1>Image Forgery Detection</h1>
+      <p>Advanced copy-move detection powered by computer vision</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('analyze')">📤 Analyze</button>
+      <button class="tab-btn" onclick="switchTab('batch')">📁 Batch</button>
+      <button class="tab-btn" onclick="switchTab('compare')">⚖ Compare</button>
+      <button class="tab-btn" onclick="switchTab('annotate')">✏ Annotate</button>
+      <button class="tab-btn" onclick="switchTab('history')">⏱ History</button>
+      <button class="tab-btn" onclick="switchTab('performance')">📊 Performance</button>
+      <button class="tab-btn" onclick="switchTab('research')">📚 Research</button>
+      <button class="tab-btn" onclick="switchTab('about')">ℹ About</button>
+    </div>
+
+    <!-- ANALYZE TAB -->
+    <div class="tab-content active" id="tab-analyze">
+      <div class="panel">
+        <div class="panel-title">Image Analysis</div>
+        <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+          <div class="drop-icon">🖼</div>
+          <h3>Drop image here or click to upload</h3>
+          <p>Supports JPG, PNG, BMP, TIFF, WEBP — Max 16MB</p>
+          <input type="file" id="fileInput" accept="image/*" style="display:none" />
+        </div>
+
+        <div id="previewSection" style="display:none;margin-top:1.5rem">
+          <img id="previewImg" style="max-width:100%;border-radius:8px;border:1px solid var(--border)" />
+          <div id="fileInfo" style="margin-top:.5rem;color:var(--text-dim);font-size:.9rem"></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem">
+          <div class="option-group">
+            <label>Algorithm</label>
+            <select id="methodSelect">
+              <option>ORB (Fast)</option>
+              <option>SIFT (Accurate)</option>
+              <option>Auto</option>
+            </select>
+          </div>
+          <div class="option-group">
+            <label>Sensitivity</label>
+            <select id="sensSelect">
+              <option value="0">Low</option>
+              <option value="1" selected>Medium</option>
+              <option value="2">High</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="runAnalysis()">▶ Detect Forgery</button>
+
+        <div id="loadingSection" style="display:none;text-align:center;margin-top:2rem">
+          <div class="spinner"></div>
+          <p style="margin-top:1rem;color:var(--text-dim)">Analyzing image...</p>
+        </div>
+
+        <div id="resultsSection" style="display:none;margin-top:2rem"></div>
+      </div>
+    </div>
+
+    <!-- BATCH TAB -->
+    <div class="tab-content" id="tab-batch">
+      <div class="panel">
+        <div class="panel-title">Batch Processing</div>
+        <div class="drop-zone" id="batchDropZone" onclick="document.getElementById('batchInput').click()">
+          <div class="drop-icon">📁</div>
+          <h3>Select multiple images</h3>
+          <input type="file" id="batchInput" accept="image/*" multiple style="display:none" />
+        </div>
+        <button class="btn btn-primary" id="batchBtn" onclick="runBatch()" disabled style="margin-top:1rem">▶ Analyze
+          All</button>
+        <div id="batchStats" style="display:none;margin-top:2rem"></div>
+        <div id="batchFilter" style="display:none;margin-top:1.5rem;display:flex;gap:1rem;align-items:center">
+          <label style="font-size:0.9rem;font-weight:600">Filter By:</label>
+          <button class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem"
+            onclick="filterBatch('all')">All</button>
+          <button class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem;border-color:var(--accent2)"
+            onclick="filterBatch('forged')">Forged</button>
+          <button class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem;border-color:var(--success)"
+            onclick="filterBatch('authentic')">Authentic</button>
+        </div>
+        <div id="batchResults"
+          style="margin-top:1.5rem;display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:1rem">
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARE TAB -->
+    <div class="tab-content" id="tab-compare">
+      <div class="panel">
+        <div class="panel-title">Multi-Algorithm Comparison</div>
+        <p style="color:var(--text-dim);margin-bottom:1.5rem">Compare how different forensic algorithms analyze the same
+          image.</p>
+
+        <div class="drop-zone" id="compareDropZone" onclick="document.getElementById('compareInput').click()">
+          <div class="drop-icon">🔬</div>
+          <h3>Select Image for Multi-Analysis</h3>
+          <input type="file" id="compareInput" accept="image/*" style="display:none" />
+        </div>
+
+        <div id="comparePreview" style="display:none;margin-top:1.5rem;text-align:center">
+          <img id="comparePreviewImg" style="max-height:200px;border-radius:8px;border:1px solid var(--border)" />
+        </div>
+
+        <div style="margin-top:1.5rem;background:var(--surface);padding:1rem;border-radius:8px">
+          <label style="display:block;margin-bottom:.5rem;font-size:.9rem;font-weight:600">Select Algorithms</label>
+          <div style="display:flex;gap:2rem">
+            <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
+              <input type="checkbox" id="checkSIFT" checked value="SIFT"> SIFT (High Precision)
+            </label>
+            <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
+              <input type="checkbox" id="checkORB" checked value="ORB"> ORB (High Speed)
+            </label>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="compareBtn" onclick="runComparison()" style="margin-top:1.5rem;width:100%">⚖
+          Start Multi-Algorithm Scan</button>
+
+        <div id="compareLoading" style="display:none;text-align:center;margin-top:2rem">
+          <div class="spinner"></div>
+          <p style="color:var(--accent)">Running multiple forensic scans...</p>
+        </div>
+
+        <div id="comparisonResults" style="margin-top:2rem"></div>
+      </div>
+    </div>
+
+    <!-- ANNOTATE TAB -->
+    <div class="tab-content" id="tab-annotate">
+      <div class="panel">
+        <div class="panel-title">Advanced Image Annotation</div>
+        
+        <!-- Upload Section -->
+        <div style="margin-bottom:1.5rem">
+          <label style="display:block;margin-bottom:0.5rem;font-weight:500">📁 Upload Image</label>
+          <input type="file" id="annotateInput" accept="image/*" onchange="loadAnnotationImage()" 
+                 style="padding:0.5rem;border:1px dashed var(--border);border-radius:6px;width:100%;cursor:pointer"/>
+        </div>
+
+        <!-- Annotation Toolbar (Hidden until image loaded) -->
+        <div id="annotationToolbar" style="display:none;background:var(--surface);padding:1rem;border-radius:10px;margin-bottom:1rem;border:1px solid var(--border)">
+          <!-- Row 1: Drawing Tools -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:0.5rem;margin-bottom:1rem">
+            <button class="tool-btn active" onclick="selectTool('rect')" title="Rectangle">📦 Rectangle</button>
+            <button class="tool-btn" onclick="selectTool('circle')" title="Circle">⭕ Circle</button>
+            <button class="tool-btn" onclick="selectTool('line')" title="Line">📍 Line</button>
+            <button class="tool-btn" onclick="selectTool('arrow')" title="Arrow">➜ Arrow</button>
+            <button class="tool-btn" onclick="selectTool('freehand')" title="Freehand">✏️ Pen</button>
+            <button class="tool-btn" onclick="selectTool('text')" title="Text">📝 Text</button>
+            <button class="tool-btn" onclick="selectTool('eraser')" title="Eraser">🗑️ Eraser</button>
+          </div>
+
+          <!-- Row 2: Color & Size Controls -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1rem">
+            <div>
+              <label style="font-size:0.8rem;color:var(--text-dim)">Color</label>
+              <div style="display:flex;gap:0.5rem;margin-top:0.3rem">
+                <input type="color" id="annotationColor" value="#00d9ff" onchange="updateAnnotationColor()" style="width:50px;height:40px;border:none;border-radius:4px;cursor:pointer"/>
+                <select id="presetColor" onchange="applyPresetColor()" style="flex:1;padding:0.5rem;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--text)">
+                  <option value="">Custom</option>
+                  <option value="#00d9ff">Cyan</option>
+                  <option value="#ff0055">Red</option>
+                  <option value="#ffd700">Gold</option>
+                  <option value="#10b981">Green</option>
+                  <option value="#f59e0b">Orange</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label style="font-size:0.8rem;color:var(--text-dim)">Brush Size: <span id="brushSizeLabel">3</span>px</label>
+              <input type="range" id="brushSize" min="1" max="30" value="3" onchange="updateBrushSize()" 
+                     style="width:100%;cursor:pointer;margin-top:0.3rem"/>
+            </div>
+
+            <div>
+              <label style="font-size:0.8rem;color:var(--text-dim)">Opacity: <span id="opacityLabel">100</span>%</label>
+              <input type="range" id="brushOpacity" min="10" max="100" value="100" step="10" onchange="updateOpacity()"
+                     style="width:100%;cursor:pointer;margin-top:0.3rem"/>
+            </div>
+          </div>
+
+          <!-- Row 3: Action Buttons -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:0.5rem">
+            <button class="btn btn-secondary" onclick="undoAnnotation()" title="Undo (Ctrl+Z)">↶ Undo</button>
+            <button class="btn btn-secondary" onclick="redoAnnotation()" title="Redo (Ctrl+Y)">↷ Redo</button>
+            <button class="btn btn-secondary" onclick="clearAnnotations()">🗑️ Clear All</button>
+            <button class="btn btn-secondary" onclick="resetZoom()" title="Reset zoom">📐 Reset</button>
+            <button class="btn btn-secondary" onclick="toggleGrid()" id="gridToggle" title="Toggle grid overlay">⊞ Grid</button>
+            <button class="btn" style="background:var(--accent2)" onclick="saveAnnotations()">⬇️ Download</button>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div id="canvasContainer" style="display:none;position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:auto;max-height:600px">
+          <canvas id="annotationCanvas" style="display:block;cursor:crosshair"></canvas>
+          <div id="textInputBox" style="display:none;position:absolute;background:var(--card);border:2px solid var(--accent);padding:0.5rem;border-radius:4px;z-index:1000">
+            <input type="text" id="textInput" placeholder="Enter text..." style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:0.5rem;border-radius:4px;width:200px" onkeypress="handleTextInput(event)"/>
+          </div>
+        </div>
+
+        <!-- Status Message -->
+        <div id="annotationMsg" style="margin-top:1rem;color:var(--text-dim);text-align:center;min-height:1.5rem"></div>
+
+        <!-- Keyboard Shortcuts Help -->
+        <div style="margin-top:1rem;padding:0.8rem;background:var(--surface);border-radius:6px;border-left:3px solid var(--accent);font-size:0.85rem">
+          <strong>💡 Keyboard Shortcuts:</strong><br/>
+          Ctrl+Z (Undo) • Ctrl+Y (Redo) • Del (Clear) • Scroll (Zoom) • Right-Click (Pan)
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div class="tab-content" id="tab-history">
+      <div class="panel">
+        <div class="panel-title">📊 Analysis History & Statistics</div>
+        
+        <!-- Statistics Dashboard -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:2rem;padding:1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border)">
+          <div style="text-align:center">
+            <div style="font-size:2rem;font-weight:700;color:var(--accent)">
+              <span id="statTotal">0</span>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-dim)">Total Scans</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:2rem;font-weight:700;color:var(--accent2)">
+              <span id="statForged">0</span>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-dim)">Forged</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:2rem;font-weight:700;color:var(--success)">
+              <span id="statAuthentic">0</span>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-dim)">Authentic</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:2rem;font-weight:700;color:var(--accent3)">
+              <span id="statAvg">0</span>%
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-dim)">Avg Confidence</div>
+          </div>
+        </div>
+
+        <!-- Toolbar with Controls -->
+        <div style="background:var(--surface);padding:1rem;border-radius:10px;margin-bottom:1.5rem;border:1px solid var(--border)">
+          <!-- Search & Filter Row -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:0.8rem;margin-bottom:1rem">
+            <div>
+              <input type="text" id="historySearch" placeholder="🔍 Search filename..." 
+                     onkeyup="filterHistory()" 
+                     style="width:100%;padding:0.6rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text)"/>
+            </div>
+            <select id="filterResult" onchange="filterHistory()" 
+                    style="padding:0.6rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text)">
+              <option value="">All Results</option>
+              <option value="forged">⚠️ Forged Only</option>
+              <option value="authentic">✅ Authentic Only</option>
+            </select>
+            <select id="filterSort" onchange="filterHistory()" 
+                    style="padding:0.6rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text)">
+              <option value="recent">📅 Newest First</option>
+              <option value="oldest">🗓️ Oldest First</option>
+              <option value="confidence">🎯 Highest Confidence</option>
+              <option value="filename">📝 Alphabetical</option>
+            </select>
+            <button class="btn btn-secondary" onclick="toggleSelectAll()" title="Select All">☑️</button>
+          </div>
+
+          <!-- Confidence Slider & Action Buttons -->
+          <div style="display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:center">
+            <div>
+              <label style="font-size:0.8rem;color:var(--text-dim)">Confidence Range: <span id="confLabel">0-100</span>%</label>
+              <input type="range" id="confMin" min="0" max="100" value="0" onchange="filterHistory()" 
+                     style="width:100%;cursor:pointer;margin-top:0.3rem"/>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:0.5rem;white-space:nowrap">
+              <button class="btn btn-secondary" onclick="exportHistoryCSV()" title="Export as CSV">📥 CSV</button>
+              <button class="btn btn-secondary" onclick="exportHistoryJSON()" title="Export as JSON">📥 JSON</button>
+              <button class="btn" style="background:var(--accent2);color:#fff" onclick="deleteSelected()" 
+                      id="deleteBtn" style="display:none" title="Delete selected">🗑️ Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Count & View Options -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;color:var(--text-dim);font-size:0.9rem">
+          <span>Showing <strong id="resultCount">0</strong> of <strong id="totalCount">0</strong> records</span>
+          <div style="display:flex;gap:0.5rem">
+            <button class="tool-btn" onclick="toggleViewMode('grid')" id="viewGrid" style="padding:0.4rem 0.8rem;font-size:0.85rem">⊞ Grid</button>
+            <button class="tool-btn" onclick="toggleViewMode('list')" id="viewList" style="padding:0.4rem 0.8rem;font-size:0.85rem">☰ List</button>
+          </div>
+        </div>
+
+        <!-- History Grid/List Container -->
+        <div id="historyGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem">
+        </div>
+
+        <!-- Load More Button -->
+        <button id="loadMoreBtn" class="btn btn-secondary" onclick="loadMoreHistory()" 
+                style="width:100%;margin-top:1.5rem;display:none">📌 Load More (Showing <span id="displayCount">0</span>/<span id="filteredCount">0</span>)</button>
+      </div>
+    </div>
+
+    <!-- PERFORMANCE TAB -->
+    <div class="tab-content" id="tab-performance">
+      <div class="panel">
+        <div class="panel-title">Model Performance</div>
+        <div class="perf-grid">
+          <div class="perf-card">
+            <div class="perf-number">87.5%</div>
+            <div class="perf-label">Accuracy</div>
+          </div>
+          <div class="perf-card">
+            <div class="perf-number">89.2%</div>
+            <div class="perf-label">Precision</div>
+          </div>
+          <div class="perf-card">
+            <div class="perf-number">85.8%</div>
+            <div class="perf-label">Recall</div>
+          </div>
+          <div class="perf-card">
+            <div class="perf-number">87.4%</div>
+            <div class="perf-label">F1-Score</div>
+          </div>
+          <div class="perf-card">
+            <div class="perf-number">234ms</div>
+            <div class="perf-label">Avg Inference</div>
+          </div>
+          <div class="perf-card">
+            <div class="perf-number" id="scanCount">0</div>
+            <div class="perf-label">Total Scans</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESEARCH TAB -->
+    <div class="tab-content" id="tab-research">
+      <div class="panel">
+        <div class="panel-title">Research & Benchmarks</div>
+        <div style="margin-bottom:2rem">
+          <h3 style="margin-bottom:1rem">Baseline vs Improved</h3>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div style="font-weight:600;margin-bottom:.5rem">Baseline (SIFT)</div>
+              <div class="metric-value">82.3%</div>
+            </div>
+            <div class="metric-card" style="border-color:var(--accent)">
+              <div style="font-weight:600;margin-bottom:.5rem">Improved (SIFT+ORB)</div>
+              <div class="metric-value">87.5%</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--surface);padding:1.5rem;border-radius:12px">
+          <h4 style="margin-bottom:1rem">Error Analysis</h4>
+          <p style="margin-bottom:.5rem;color:var(--text-dim)"><strong>False Positives:</strong> ~8% (texture-heavy
+            images)</p>
+          <p style="margin-bottom:.5rem;color:var(--text-dim)"><strong>False Negatives:</strong> ~6% (sub-pixel clones)
+          </p>
+          <p style="color:var(--text-dim)"><strong>Dataset:</strong> CASIA v1/v2, ~7,200 forged + 1,500 authentic images
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT TAB -->
+    <div class="tab-content" id="tab-about">
+      <div class="panel">
+        <div class="panel-title">About This Project</div>
+        <h3 style="margin-bottom:1rem">Deep Forensics</h3>
+        <p style="margin-bottom:1rem;color:var(--text-dim)">Enterprise-grade copy-move forgery detection using advanced
+          feature extraction (SIFT/ORB) and machine learning clustering (DBSCAN).</p>
+        <p style="color:var(--text-dim)"><strong>Use Cases:</strong> Journalism verification, legal forensics, social
+          media authenticity, scientific image validation.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Zoom Modal -->
+  <div class="modal" id="zoomModal">
+    <span class="modal-close" onclick="this.parentElement.classList.remove('active')">&times;</span>
+    <img id="zoomImg" src="" alt="Zoomed" />
+  </div>
+
+  <!-- API Guide Modal -->
+  <div class="modal" id="apiModal">
+    <div style="background:var(--card);padding:2rem;border-radius:12px;max-width:600px;border:1px solid var(--border)">
+      <span class="modal-close" onclick="this.parentElement.parentElement.classList.remove('active')">&times;</span>
+      <h2 style="margin-bottom:1rem">API Documentation</h2>
+      <div
+        style="background:var(--surface);padding:1rem;border-radius:8px;font-family:var(--mono);font-size:.85rem;overflow-x:auto">
+        <p><strong>POST /api/detect-forgery</strong></p>
+        <p>curl -X POST http://localhost:5000/api/detect-forgery \</p>
+        <p>&nbsp;&nbsp;-F image=@photo.jpg</p>
+      </div>
+      <p style="margin-top:1rem;color:var(--text-dim);font-size:.9rem">Returns JSON with detection result, confidence,
+        metadata, and hashes.</p>
+      <button class="btn btn-secondary"
+        onclick="document.getElementById('apiModal').parentElement.classList.remove('active')"
+        style="margin-top:1rem">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // ─── Theme Toggle ───
+    function toggleTheme() {
+      const html = document.documentElement;
+      const t = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', t);
+      document.getElementById('themeToggle').textContent = t === 'dark' ? '🌙' : '☀️';
+      localStorage.setItem('theme', t);
+    }
+    (function () {
+      const t = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+      document.getElementById('themeToggle').textContent = t === 'dark' ? '🌙' : '☀️';
+    })();
+
+    // ─── Tabs ───
+    function switchTab(id) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-' + id).classList.add('active');
+      event.target.classList.add('active');
+      if (id === 'history') loadHistory();
+      if (id === 'performance') updateScanCount();
+    }
+
+    // ─── File Upload ───
+    let selectedFile = null, img1File = null, img2File = null;
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragging'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragging'));
+    dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragging'); handleFile(e.dataTransfer.files[0]); });
+    fileInput.addEventListener('change', e => { handleFile(e.target.files[0]); });
+
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file');
+        return;
+      }
+      selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = e => {
+        document.getElementById('previewImg').src = e.target.result;
+        document.getElementById('previewSection').style.display = 'block';
+        document.getElementById('fileInfo').textContent = `${file.name} • ${(file.size / 1024).toFixed(1)}KB`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ─── Analysis ───
+    async function runAnalysis() {
+      if (!selectedFile) { alert('Select an image first'); return; }
+      document.getElementById('loadingSection').style.display = 'block';
+      document.getElementById('resultsSection').style.display = 'none';
+
+      const fd = new FormData();
+      fd.append('image', selectedFile);
+      fd.append('method', document.getElementById('methodSelect').value.includes('ORB') ? 'ORB' : 'SIFT');
+
+      try {
+        const res = await fetch('/analyze', { method: 'POST', body: fd });
+        const data = await res.json();
+        displayResults(data);
+      } catch (e) {
+        alert('Analysis failed: ' + e.message);
+      } finally {
+        document.getElementById('loadingSection').style.display = 'none';
+      }
+    }
+
+    function displayResults(data) {
+      const html = `
+        <div class="verdict-banner ${data.detected ? 'forged' : 'authentic'}">
+          <div class="verdict-icon">${data.detected ? '⚠️' : '✅'}</div>
+          <div>
+            <div class="verdict-label">${data.detected ? 'Anomaly Detected' : 'Appears Authentic'}</div>
+            <div class="verdict-title">${data.confidence}% Confidence</div>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card"><div class="metric-value">${data.total_keypoints}</div><div class="metric-label">Keypoints</div></div>
+          <div class="metric-card"><div class="metric-value">${data.total_matches}</div><div class="metric-label">Matches</div></div>
+          <div class="metric-card"><div class="metric-value">${data.suspicious_pairs}</div><div class="metric-label">Suspicious</div></div>
+          <div class="metric-card"><div class="metric-value">${data.clusters_found}</div><div class="metric-label">Clusters</div></div>
+        </div>
+
+        ${data.confidence_breakdown ? `<div style="background:var(--surface);padding:1.5rem;border-radius:12px;margin:1.5rem 0">
+          <div class="metrics-grid">
+            <div><div style="color:var(--text-dim);font-size:.8rem;margin-bottom:.5rem">Similarity</div><div class="metric-value" style="font-size:1.8rem">${data.confidence_breakdown.similarity_score}%</div></div>
+            <div><div style="color:var(--text-dim);font-size:.8rem;margin-bottom:.5rem">Texture</div><div class="metric-value" style="font-size:1.8rem">${data.confidence_breakdown.texture_match_score}%</div></div>
+            <div><div style="color:var(--text-dim);font-size:.8rem;margin-bottom:.5rem">Duplication</div><div class="metric-value" style="font-size:1.8rem">${data.confidence_breakdown.region_duplication_score}%</div></div>
+          </div>
+        </div>` : ''}
+
+        <div class="compare-grid">
+          <div class="img-container">
+            <div class="img-label">Original</div>
+            <img src="${data.uploaded_image_url}" onclick="openZoom(this.src)"/>
+          </div>
+          <div class="img-container">
+            <div class="img-label">Analysis</div>
+            <img src="${data.result_image_url}?t=${Date.now()}" onclick="openZoom(this.src)"/>
+          </div>
+        </div>
+
+        ${data.image_hash ? `<div style="background:var(--surface);padding:1rem;border-radius:8px;margin-top:1rem;font-family:var(--mono);font-size:.8rem">
+          <p style="color:var(--text-dim)">Hash: <code>${data.image_hash}</code></p>
+        </div>` : ''}
+
+        <div style="display:flex;gap:1rem;margin-top:1.5rem">
+          <button class="btn btn-secondary" onclick="location.reload()">New Analysis</button>
+          ${data.analysis_id ? `
+            <button class="btn btn-primary" onclick="window.location.href='/report/edit/${data.analysis_id}'">✏ Edit Report</button>
+            <button class="btn btn-secondary" onclick="window.open('/report/${data.analysis_id}')">📋 Download</button>
+          ` : ''}
+        </div>
+      `;
+      document.getElementById('resultsSection').innerHTML = html;
+      document.getElementById('resultsSection').style.display = 'block';
+    }
+
+    // ─── Batch ───
+    let batchFiles = [];
+    document.getElementById('batchInput').addEventListener('change', e => {
+      batchFiles = Array.from(e.target.files);
+      document.getElementById('batchBtn').disabled = batchFiles.length === 0;
+    });
+
+    let currentBatchData = [];
+    async function runBatch() {
+      const resultsDiv = document.getElementById('batchResults');
+      const statsDiv = document.getElementById('batchStats');
+      const filterDiv = document.getElementById('batchFilter');
+
+      resultsDiv.innerHTML = '<div class="spinner"></div>';
+      statsDiv.style.display = 'none';
+      filterDiv.style.display = 'none';
+
+      const fd = new FormData();
+      batchFiles.forEach(f => fd.append('images', f));
+      try {
+        const res = await fetch('/analyze-batch', { method: 'POST', body: fd });
+        const data = await res.json();
+        currentBatchData = data.results;
+        renderBatchResults(currentBatchData);
+        renderBatchStats(currentBatchData);
+        statsDiv.style.display = 'grid';
+        filterDiv.style.display = 'flex';
+      } catch (e) { alert('Batch failed: ' + e.message); }
+    }
+
+    function renderBatchStats(results) {
+      const total = results.length;
+      const forged = results.filter(r => r.detected).length;
+      const authentic = total - forged;
+      const avgConf = total > 0 ? (results.reduce((acc, r) => acc + r.confidence, 0) / total).toFixed(1) : 0;
+
+      document.getElementById('batchStats').innerHTML = `
+        <div class="metrics-grid" style="grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:1rem">
+          <div class="metric-card"><div class="metric-value">${total}</div><div class="metric-label">Total Images</div></div>
+          <div class="metric-card" style="border-color:var(--accent2)"><div class="metric-value" style="color:var(--accent2)">${forged}</div><div class="metric-label">Forged</div></div>
+          <div class="metric-card" style="border-color:var(--success)"><div class="metric-value" style="color:var(--success)">${authentic}</div><div class="metric-label">Authentic</div></div>
+          <div class="metric-card"><div class="metric-value">${avgConf}%</div><div class="metric-label">Avg Confidence</div></div>
+        </div>
+      `;
+    }
+
+    function renderBatchResults(results) {
+      const html = results.map(r => `
+        <div class="batch-item" style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform 0.2s">
+          <div style="position:relative;height:150px;background:#000;display:flex;align-items:center;justify-content:center">
+            <img src="${r.result_image_url}" style="max-height:100%;max-width:100%;cursor:zoom-in" onclick="openZoom(this.src)"/>
+            <div style="position:absolute;top:10px;right:10px;padding:4px 8px;border-radius:4px;font-size:0.7rem;font-weight:700;background:${r.detected ? 'var(--accent2)' : 'var(--success)'};color:white">
+              ${r.detected ? 'FORGED' : 'AUTHENTIC'}
+            </div>
+          </div>
+          <div style="padding:1rem">
+            <div style="font-size:0.9rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${r.original_filename}">${r.original_filename}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem">
+              <span style="font-size:0.8rem;color:var(--text-dim)">Conf: ${r.confidence}%</span>
+              <a href="/report/edit/${r.analysis_id}" class="btn btn-secondary" style="padding:4px 8px;font-size:0.7rem;border-radius:4px">Edit Report ✏</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('batchResults').innerHTML = html || '<p style="color:var(--text-dim);grid-column:1/-1;text-align:center;padding:2rem">No images match typical filters.</p>';
+    }
+
+    function filterBatch(type) {
+      if (type === 'all') {
+        renderBatchResults(currentBatchData);
+      } else if (type === 'forged') {
+        renderBatchResults(currentBatchData.filter(r => r.detected));
+      } else if (type === 'authentic') {
+        renderBatchResults(currentBatchData.filter(r => !r.detected));
+      }
+    }
+
+    // ─── Comparison (Multi-Algorithm) ───
+    let compareFile = null;
+    document.getElementById('compareInput').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      compareFile = file;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        document.getElementById('comparePreviewImg').src = ev.target.result;
+        document.getElementById('comparePreview').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    async function runComparison() {
+      if (!compareFile) { alert('Upload an image first'); return; }
+      const methods = [];
+      if (document.getElementById('checkSIFT').checked) methods.push('SIFT');
+      if (document.getElementById('checkORB').checked) methods.push('ORB');
+
+      if (methods.length === 0) { alert('Select at least one algorithm'); return; }
+
+      document.getElementById('compareLoading').style.display = 'block';
+      document.getElementById('comparisonResults').innerHTML = '';
+      document.getElementById('compareBtn').disabled = true;
+
+      const fd = new FormData();
+      fd.append('image', compareFile);
+      methods.forEach(m => fd.append('methods', m));
+
+      try {
+        const res = await fetch('/analyze-compare', { method: 'POST', body: fd });
+        const data = await res.json();
+        renderComparisonResults(data);
+      } catch (e) {
+        alert('Comparison failed: ' + e.message);
+      } finally {
+        document.getElementById('compareLoading').style.display = 'none';
+        document.getElementById('compareBtn').disabled = false;
+      }
+    }
+
+    function renderComparisonResults(data) {
+      const results = data.results;
+      const methods = Object.keys(results);
+
+      let html = `
+        <div style="background:var(--card);padding:1.5rem;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)">
+          <h3 style="margin-bottom:1rem">Cross-Algorithm Verdict</h3>
+          <div style="display:flex;gap:1.5rem;align-items:center">
+            ${methods.map(m => `
+              <div style="flex:1;text-align:center;padding:1rem;background:var(--surface);border-radius:8px;border-top:4px solid ${results[m].detected ? 'var(--accent2)' : 'var(--success)'}">
+                <div style="font-size:0.75rem;color:var(--text-dim);text-transform:uppercase">${m}</div>
+                <div style="font-size:1.2rem;font-weight:700;margin:.5rem 0">${results[m].detected ? '⚠️ FORGED' : '✅ AUTHENTIC'}</div>
+                <div style="font-size:0.9rem;color:var(--text)">${results[m].confidence}% Confidence</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div style="display:grid;grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));gap:1.5rem">
+          ${methods.map(m => `
+            <div class="panel" style="margin:0;padding:1.5rem">
+              <div class="panel-title">${m} Analysis Details</div>
+              <div class="img-container" style="margin-top:1rem">
+                <img src="/static/results/${results[m].result_image}?t=${Date.now()}" onclick="openZoom(this.src)" style="width:100%;border-radius:8px"/>
+              </div>
+              <div class="metrics-grid" style="margin-top:1rem">
+                <div class="metric-card"><div class="metric-value">${results[m].total_keypoints}</div><div class="metric-label">Keypoints</div></div>
+                <div class="metric-card"><div class="metric-value">${results[m].suspicious_pairs}</div><div class="metric-label">Suspicious</div></div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      document.getElementById('comparisonResults').innerHTML = html;
+    }
+
+    // ─── Advanced Annotation System ───
+    let annotationState = {
+      canvas: null,
+      ctx: null,
+      originalImage: null,
+      isDrawing: false,
+      tool: 'rect',
+      startX: 0,
+      startY: 0,
+      color: '#00d9ff',
+      size: 3,
+      opacity: 1,
+      history: [],
+      historyIndex: -1,
+      zoom: 1,
+      panX: 0,
+      panY: 0,
+      showGrid: false,
+      isPanning: false,
+      isRightClick: false
+    };
+
+    function loadAnnotationImage() {
+      const file = document.getElementById('annotateInput').files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.getElementById('annotationCanvas');
+          const container = document.getElementById('canvasContainer');
+          
+          container.style.display = 'block';
+          canvas.width = img.width;
+          canvas.height = img.height;
+          
+          annotationState.canvas = canvas;
+          annotationState.ctx = canvas.getContext('2d');
+          annotationState.originalImage = img;
+          annotationState.zoom = 1;
+          annotationState.panX = 0;
+          annotationState.panY = 0;
+          
+          document.getElementById('annotationToolbar').style.display = 'block';
+          document.getElementById('annotationMsg').textContent = '✏️ Ready to annotate. Select a tool and start drawing!';
+          
+          redrawCanvas();
+          attachCanvasListeners();
+          saveToHistory();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function selectTool(tool) {
+      annotationState.tool = tool;
+      document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.closest('.tool-btn').classList.add('active');
+      document.getElementById('annotationMsg').textContent = `Selected: ${tool.toUpperCase()} tool`;
+    }
+
+    function updateBrushSize() {
+      const size = document.getElementById('brushSize').value;
+      annotationState.size = size;
+      document.getElementById('brushSizeLabel').textContent = size;
+    }
+
+    function updateOpacity() {
+      const opacity = document.getElementById('brushOpacity').value;
+      annotationState.opacity = opacity / 100;
+      document.getElementById('opacityLabel').textContent = opacity;
+    }
+
+    function updateAnnotationColor() {
+      const color = document.getElementById('annotationColor').value;
+      annotationState.color = color;
+      document.getElementById('presetColor').value = '';
+    }
+
+    function applyPresetColor() {
+      const preset = document.getElementById('presetColor').value;
+      if (preset) {
+        document.getElementById('annotationColor').value = preset;
+        annotationState.color = preset;
+      }
+    }
+
+    function attachCanvasListeners() {
+      const canvas = annotationState.canvas;
+      
+      canvas.addEventListener('mousedown', e => {
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / annotationState.zoom - annotationState.panX;
+        const y = (e.clientY - rect.top) / annotationState.zoom - annotationState.panY;
+        
+        if (e.button === 2) { // Right-click for panning
+          annotationState.isPanning = true;
+          annotationState.isRightClick = true;
+          return;
+        }
+        
+        annotationState.isDrawing = true;
+        annotationState.startX = x;
+        annotationState.startY = y;
+        
+        if (annotationState.tool === 'text') {
+          showTextInput(x, y);
+          annotationState.isDrawing = false;
+        }
+      });
+
+      canvas.addEventListener('mousemove', e => {
+        if (!annotationState.isDrawing && !annotationState.isPanning) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / annotationState.zoom - annotationState.panX;
+        const y = (e.clientY - rect.top) / annotationState.zoom - annotationState.panY;
+        
+        if (annotationState.isPanning) {
+          annotationState.panX += (e.movementX / annotationState.zoom);
+          annotationState.panY += (e.movementY / annotationState.zoom);
+          redrawCanvas();
+          return;
+        }
+
+        if (annotationState.tool === 'freehand') {
+          drawLine(annotationState.startX, annotationState.startY, x, y);
+          annotationState.startX = x;
+          annotationState.startY = y;
+        } else {
+          redrawCanvas();
+          drawPreview(x, y);
+        }
+      });
+
+      canvas.addEventListener('mouseup', e => {
+        if (annotationState.isDrawing && annotationState.tool !== 'freehand') {
+          const rect = canvas.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / annotationState.zoom - annotationState.panX;
+          const y = (e.clientY - rect.top) / annotationState.zoom - annotationState.panY;
+          finishShape(x, y);
+          saveToHistory();
+        }
+        annotationState.isDrawing = false;
+        annotationState.isPanning = false;
+      });
+
+      canvas.addEventListener('contextmenu', e => e.preventDefault());
+      canvas.addEventListener('wheel', e => {
+        e.preventDefault();
+        const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+        annotationState.zoom = Math.max(0.5, Math.min(annotationState.zoom * zoomFactor, 4));
+        redrawCanvas();
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undoAnnotation(); }
+        if (e.ctrlKey && e.key === 'y') { e.preventDefault(); redoAnnotation(); }
+        if (e.key === 'Delete') { e.preventDefault(); clearAnnotations(); }
+      });
+    }
+
+    function redrawCanvas() {
+      const canvas = annotationState.canvas;
+      const ctx = annotationState.ctx;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.save();
+      ctx.translate(annotationState.panX * annotationState.zoom, annotationState.panY * annotationState.zoom);
+      ctx.scale(annotationState.zoom, annotationState.zoom);
+      
+      ctx.drawImage(annotationState.originalImage, 0, 0);
+      
+      if (annotationState.showGrid) drawGrid();
+      
+      ctx.restore();
+    }
+
+    function drawPreview(endX, endY) {
+      const ctx = annotationState.ctx;
+      ctx.globalAlpha = annotationState.opacity;
+      ctx.strokeStyle = annotationState.color;
+      ctx.fillStyle = annotationState.color;
+      ctx.lineWidth = annotationState.size;
+      
+      if (annotationState.tool === 'rect') {
+        ctx.strokeRect(annotationState.startX, annotationState.startY, endX - annotationState.startX, endY - annotationState.startY);
+      } else if (annotationState.tool === 'circle') {
+        const r = Math.hypot(endX - annotationState.startX, endY - annotationState.startY);
+        ctx.beginPath();
+        ctx.arc(annotationState.startX, annotationState.startY, r, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (annotationState.tool === 'line') {
+        ctx.beginPath();
+        ctx.moveTo(annotationState.startX, annotationState.startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+      } else if (annotationState.tool === 'arrow') {
+        drawArrow(annotationState.startX, annotationState.startY, endX, endY);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function finishShape(endX, endY) {
+      redrawCanvas();
+      drawPreview(endX, endY);
+    }
+
+    function drawLine(fromX, fromY, toX, toY) {
+      const ctx = annotationState.ctx;
+      ctx.globalAlpha = annotationState.opacity;
+      ctx.strokeStyle = annotationState.color;
+      ctx.lineWidth = annotationState.size;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(fromX, fromY);
+      ctx.lineTo(toX, toY);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    function drawArrow(fromX, fromY, toX, toY) {
+      const ctx = annotationState.ctx;
+      const headlen = 15;
+      const angle = Math.atan2(toY - fromY, toX - fromX);
+      
+      ctx.globalAlpha = annotationState.opacity;
+      ctx.strokeStyle = annotationState.color;
+      ctx.fillStyle = annotationState.color;
+      ctx.lineWidth = annotationState.size;
+      
+      ctx.beginPath();
+      ctx.moveTo(fromX, fromY);
+      ctx.lineTo(toX, toY);
+      ctx.stroke();
+      
+      ctx.beginPath();
+      ctx.moveTo(toX, toY);
+      ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    function drawGrid() {
+      const ctx = annotationState.ctx;
+      ctx.globalAlpha = 0.1;
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1;
+      const gridSize = 50;
+      
+      for (let x = 0; x < annotationState.canvas.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, annotationState.canvas.height);
+        ctx.stroke();
+      }
+      
+      for (let y = 0; y < annotationState.canvas.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(annotationState.canvas.width, y);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function showTextInput(x, y) {
+      const textBox = document.getElementById('textInputBox');
+      const canvas = annotationState.canvas;
+      const rect = canvas.getBoundingClientRect();
+      textBox.style.left = (rect.left + x * annotationState.zoom) + 'px';
+      textBox.style.top = (rect.top + y * annotationState.zoom) + 'px';
+      textBox.style.display = 'block';
+      document.getElementById('textInput').focus();
+      document.getElementById('textInput').value = '';
+      document.getElementById('textInput').dataset.x = x;
+      document.getElementById('textInput').dataset.y = y;
+    }
+
+    function handleTextInput(e) {
+      if (e.key === 'Enter') {
+        const text = document.getElementById('textInput').value;
+        const x = parseFloat(document.getElementById('textInput').dataset.x);
+        const y = parseFloat(document.getElementById('textInput').dataset.y);
+        
+        const ctx = annotationState.ctx;
+        ctx.globalAlpha = annotationState.opacity;
+        ctx.fillStyle = annotationState.color;
+        ctx.font = `${annotationState.size * 5}px Arial`;
+        ctx.fillText(text, x, y);
+        ctx.globalAlpha = 1;
+        
+        document.getElementById('textInputBox').style.display = 'none';
+        saveToHistory();
+      }
+    }
+
+    function toggleGrid() {
+      annotationState.showGrid = !annotationState.showGrid;
+      document.getElementById('gridToggle').classList.toggle('active');
+      redrawCanvas();
+    }
+
+    function resetZoom() {
+      annotationState.zoom = 1;
+      annotationState.panX = 0;
+      annotationState.panY = 0;
+      redrawCanvas();
+    }
+
+    function saveToHistory() {
+      annotationState.history = annotationState.history.slice(0, annotationState.historyIndex + 1);
+      annotationState.history.push(annotationState.canvas.toDataURL());
+      annotationState.historyIndex++;
+      updateRedoUndoButtons();
+    }
+
+    function undoAnnotation() {
+      if (annotationState.historyIndex > 0) {
+        annotationState.historyIndex--;
+        restoreFromHistory();
+      }
+    }
+
+    function redoAnnotation() {
+      if (annotationState.historyIndex < annotationState.history.length - 1) {
+        annotationState.historyIndex++;
+        restoreFromHistory();
+      }
+    }
+
+    function restoreFromHistory() {
+      const img = new Image();
+      img.onload = () => {
+        const ctx = annotationState.ctx;
+        ctx.clearRect(0, 0, annotationState.canvas.width, annotationState.canvas.height);
+        ctx.drawImage(img, 0, 0);
+      };
+      img.src = annotationState.history[annotationState.historyIndex];
+      updateRedoUndoButtons();
+    }
+
+    function updateRedoUndoButtons() {
+      const undoBtn = document.querySelector('button[onclick="undoAnnotation()"]');
+      const redoBtn = document.querySelector('button[onclick="redoAnnotation()"]');
+      if (undoBtn) undoBtn.disabled = annotationState.historyIndex <= 0;
+      if (redoBtn) redoBtn.disabled = annotationState.historyIndex >= annotationState.history.length - 1;
+    }
+
+    function clearAnnotations() {
+      if (confirm('Clear all annotations?')) {
+        annotationState.history = [];
+        annotationState.historyIndex = -1;
+        redrawCanvas();
+        saveToHistory();
+        document.getElementById('annotationMsg').textContent = '🗑️ Cleared all annotations';
+      }
+    }
+
+    function saveAnnotations() {
+      if (annotationState.canvas) {
+        const link = document.createElement('a');
+        link.href = annotationState.canvas.toDataURL('image/png');
+        link.download = 'annotated_' + new Date().getTime() + '.png';
+        link.click();
+        document.getElementById('annotationMsg').textContent = '✅ Annotation downloaded successfully!';
+      }
+    }
+
+    // ─── History ───
+    // ─── Enhanced History System ───
+    let historyState = {
+      allHistory: [],
+      filteredHistory: [],
+      displayCount: 12,
+      selectedItems: new Set(),
+      viewMode: 'grid'
+    };
+
+    async function loadHistory() {
+      const res = await fetch('/history');
+      const data = await res.json();
+      historyState.allHistory = data;
+      
+      // Calculate statistics
+      updateHistoryStats();
+      
+      // Apply filters and render
+      filterHistory();
+    }
+
+    function updateHistoryStats() {
+      const total = historyState.allHistory.length;
+      const forged = historyState.allHistory.filter(r => r.detected).length;
+      const authentic = total - forged;
+      const avgConf = total > 0 ? Math.round(historyState.allHistory.reduce((sum, r) => sum + (r.confidence || 0), 0) / total) : 0;
+      
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statForged').textContent = forged;
+      document.getElementById('statAuthentic').textContent = authentic;
+      document.getElementById('statAvg').textContent = avgConf;
+      document.getElementById('totalCount').textContent = total;
+    }
+
+    function filterHistory() {
+      let results = [...historyState.allHistory];
+      
+      // Search filter
+      const searchTerm = document.getElementById('historySearch').value.toLowerCase();
+      if (searchTerm) {
+        results = results.filter(r => (r.original_filename || '').toLowerCase().includes(searchTerm));
+      }
+      
+      // Result filter
+      const resultFilter = document.getElementById('filterResult').value;
+      if (resultFilter === 'forged') {
+        results = results.filter(r => r.detected);
+      } else if (resultFilter === 'authentic') {
+        results = results.filter(r => !r.detected);
+      }
+      
+      // Confidence filter
+      const confMin = parseInt(document.getElementById('confMin').value);
+      results = results.filter(r => (r.confidence || 0) >= confMin);
+      updateConfLabel();
+      
+      // Sort
+      const sortBy = document.getElementById('filterSort').value;
+      if (sortBy === 'recent') {
+        results.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      } else if (sortBy === 'oldest') {
+        results.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+      } else if (sortBy === 'confidence') {
+        results.sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
+      } else if (sortBy === 'filename') {
+        results.sort((a, b) => (a.original_filename || '').localeCompare(b.original_filename || ''));
+      }
+      
+      historyState.filteredHistory = results;
+      document.getElementById('resultCount').textContent = results.length;
+      document.getElementById('filteredCount').textContent = results.length;
+      
+      // Reset display count
+      historyState.displayCount = 12;
+      renderHistory();
+    }
+
+    function updateConfLabel() {
+      const confMin = document.getElementById('confMin').value;
+      document.getElementById('confLabel').textContent = confMin + '-100';
+    }
+
+    function renderHistory() {
+      const toDisplay = historyState.filteredHistory.slice(0, historyState.displayCount);
+      document.getElementById('displayCount').textContent = toDisplay.length;
+      
+      if (toDisplay.length === 0) {
+        document.getElementById('historyGrid').innerHTML = '<p style="color:var(--text-dim);grid-column:1/-1">No records match your filters</p>';
+        document.getElementById('loadMoreBtn').style.display = 'none';
+        return;
+      }
+      
+      let html = toDisplay.map((r, idx) => {
+        const isSelected = historyState.selectedItems.has(r.analysis_id);
+        const resultStatus = r.detected ? '⚠️ Forged' : '✅ Authentic';
+        const resultColor = r.detected ? 'var(--accent2)' : 'var(--success)';
+        
+        if (historyState.viewMode === 'list') {
+          return `
+            <div style="background:var(--surface);padding:1rem;border-radius:8px;border-left:4px solid ${resultColor};display:flex;align-items:center;gap:1rem;border:1px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}">
+              <input type="checkbox" class="history-checkbox" data-id="${r.analysis_id}" onchange="toggleSelect('${r.analysis_id}')" ${isSelected ? 'checked' : ''} style="cursor:pointer;width:18px;height:18px"/>
+              <div style="flex:1">
+                <strong>${r.original_filename || 'Unknown'}</strong>
+                <small style="color:var(--text-dim);display:block">${new Date(r.timestamp).toLocaleString()}</small>
+                <span style="color:${resultColor};font-weight:600;font-size:0.9rem">${resultStatus} (${r.confidence}%)</span>
+              </div>
+              <button class="tool-btn" onclick="viewHistoryDetail('${r.analysis_id}')" style="padding:0.4rem 0.8rem">👁️ View</button>
+              <button class="tool-btn" onclick="deleteHistoryItem('${r.analysis_id}')" style="padding:0.4rem 0.8rem">🗑️</button>
+            </div>
+          `;
+        } else {
+          return `
+            <div style="background:var(--surface);padding:1rem;border-radius:10px;border:1px solid ${isSelected ? 'var(--accent)' : 'var(--border)'};transition:all 0.2s;cursor:pointer" 
+                 onmouseover="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 12px rgba(0,217,255,0.2)'" 
+                 onmouseout="this.style.borderColor='${isSelected ? 'var(--accent)' : 'var(--border)'}';this.style.boxShadow='none'">
+              <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:0.5rem">
+                <input type="checkbox" class="history-checkbox" data-id="${r.analysis_id}" onchange="toggleSelect('${r.analysis_id}')" ${isSelected ? 'checked' : ''} style="cursor:pointer;width:18px;height:18px"/>
+                <span style="color:${resultColor};font-weight:600;font-size:0.9rem">${resultStatus}</span>
+              </div>
+              <strong style="display:block;margin-bottom:0.3rem;word-break:break-word">${r.original_filename || 'Unknown'}</strong>
+              <small style="color:var(--text-dim);display:block;margin-bottom:0.8rem">${new Date(r.timestamp).toLocaleString()}</small>
+              <div style="background:var(--card);padding:0.6rem;border-radius:6px;margin-bottom:0.8rem;text-align:center">
+                <span style="font-size:1.5rem;font-weight:700;color:var(--accent)">${r.confidence}%</span>
+                <small style="color:var(--text-dim);display:block">Confidence</small>
+              </div>
+              ${r.uploaded_image_url ? `<img src="${r.uploaded_image_url}" style="width:100%;height:150px;object-fit:cover;border-radius:6px;margin-bottom:0.8rem;cursor:zoom-in" onclick="openZoom(this.src)"/>` : ''}
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem">
+                <button class="tool-btn" onclick="viewHistoryDetail('${r.analysis_id}')" style="padding:0.5rem">👁️ Details</button>
+                <button class="tool-btn" onclick="deleteHistoryItem('${r.analysis_id}')" style="padding:0.5rem;color:var(--accent2)">🗑️ Delete</button>
+              </div>
+            </div>
+          `;
+        }
+      }).join('');
+      
+      document.getElementById('historyGrid').innerHTML = html;
+      
+      // Show load more button if needed
+      if (historyState.displayCount < historyState.filteredHistory.length) {
+        document.getElementById('loadMoreBtn').style.display = 'block';
+      } else {
+        document.getElementById('loadMoreBtn').style.display = 'none';
+      }
+      
+      updateDeleteButtonVisibility();
+    }
+
+    function toggleViewMode(mode) {
+      historyState.viewMode = mode;
+      document.getElementById('viewGrid').classList.toggle('active', mode === 'grid');
+      document.getElementById('viewList').classList.toggle('active', mode === 'list');
+      
+      // Adjust grid for list view
+      const grid = document.getElementById('historyGrid');
+      if (mode === 'list') {
+        grid.style.gridTemplateColumns = '1fr';
+      } else {
+        grid.style.gridTemplateColumns = 'repeat(auto-fill,minmax(300px,1fr))';
+      }
+      
+      renderHistory();
+    }
+
+    function toggleSelect(analysisId) {
+      if (historyState.selectedItems.has(analysisId)) {
+        historyState.selectedItems.delete(analysisId);
+      } else {
+        historyState.selectedItems.add(analysisId);
+      }
+      updateDeleteButtonVisibility();
+      renderHistory();
+    }
+
+    function toggleSelectAll() {
+      if (historyState.selectedItems.size === historyState.filteredHistory.length) {
+        historyState.selectedItems.clear();
+      } else {
+        historyState.filteredHistory.forEach(r => historyState.selectedItems.add(r.analysis_id));
+      }
+      updateDeleteButtonVisibility();
+      renderHistory();
+    }
+
+    function updateDeleteButtonVisibility() {
+      const deleteBtn = document.getElementById('deleteBtn');
+      if (historyState.selectedItems.size > 0) {
+        deleteBtn.style.display = 'inline-block';
+        deleteBtn.textContent = `🗑️ Delete (${historyState.selectedItems.size})`;
+      } else {
+        deleteBtn.style.display = 'none';
+      }
+    }
+
+    function loadMoreHistory() {
+      historyState.displayCount += 12;
+      renderHistory();
+    }
+
+    function viewHistoryDetail(analysisId) {
+      const item = historyState.allHistory.find(r => r.analysis_id === analysisId);
+      if (!item) return;
+      
+      const detail = `
+        <div style="background:var(--card);padding:2rem;border-radius:10px;border:1px solid var(--border)">
+          <h3 style="margin-bottom:1.5rem">${item.original_filename || 'Unknown'}</h3>
+          
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+            <div>
+              <label style="color:var(--text-dim);font-size:0.85rem">Result</label>
+              <div style="font-size:1.3rem;font-weight:600;color:${item.detected ? 'var(--accent2)' : 'var(--success)'}">
+                ${item.detected ? '⚠️ Forged' : '✅ Authentic'}
+              </div>
+            </div>
+            <div>
+              <label style="color:var(--text-dim);font-size:0.85rem">Confidence</label>
+              <div style="font-size:1.3rem;font-weight:600;color:var(--accent)">${item.confidence}%</div>
+            </div>
+            <div>
+              <label style="color:var(--text-dim);font-size:0.85rem">Timestamp</label>
+              <div style="font-size:0.95rem">${new Date(item.timestamp).toLocaleString()}</div>
+            </div>
+            <div>
+              <label style="color:var(--text-dim);font-size:0.85rem">Analysis ID</label>
+              <div style="font-size:0.8rem;font-family:var(--mono);word-break:break-all">${item.analysis_id}</div>
+            </div>
+          </div>
+          
+          ${item.uploaded_image_url ? `<img src="${item.uploaded_image_url}" style="width:100%;max-height:400px;object-fit:contain;border-radius:8px;margin-bottom:1.5rem"/>` : ''}
+          
+          <div style="display:flex;gap:1rem;justify-content:flex-end">
+            <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+            <a href="/report/edit/${item.analysis_id}" class="btn btn-primary" style="text-decoration:none">Edit Report →</a>
+          </div>
+        </div>
+      `;
+      
+      const modal = document.getElementById('zoomModal');
+      const modalContent = modal.querySelector('[class*="modal-content"]') || modal;
+      modalContent.innerHTML = detail;
+      modal.classList.add('active');
+    }
+
+    function deleteHistoryItem(analysisId) {
+      if (confirm('Delete this record?')) {
+        fetch(`/history/delete/${analysisId}`, { method: 'DELETE' })
+          .then(() => {
+            historyState.allHistory = historyState.allHistory.filter(r => r.analysis_id !== analysisId);
+            filterHistory();
+            updateHistoryStats();
+          });
+      }
+    }
+
+    function deleteSelected() {
+      if (historyState.selectedItems.size === 0 || !confirm(`Delete ${historyState.selectedItems.size} records?`)) return;
+      
+      Promise.all(Array.from(historyState.selectedItems).map(id => 
+        fetch(`/history/delete/${id}`, { method: 'DELETE' })
+      )).then(() => {
+        historyState.allHistory = historyState.allHistory.filter(r => !historyState.selectedItems.has(r.analysis_id));
+        historyState.selectedItems.clear();
+        filterHistory();
+        updateHistoryStats();
+      });
+    }
+
+    function exportHistoryCSV() {
+      const headers = ['Filename', 'Result', 'Confidence', 'Timestamp', 'Analysis ID'];
+      const rows = historyState.filteredHistory.map(r => [
+        r.original_filename || 'Unknown',
+        r.detected ? 'Forged' : 'Authentic',
+        r.confidence + '%',
+        new Date(r.timestamp).toLocaleString(),
+        r.analysis_id
+      ]);
+      
+      let csv = headers.join(',') + '\n';
+      rows.forEach(row => {
+        csv += row.map(cell => `"${cell}"`).join(',') + '\n';
+      });
+      
+      downloadFile(csv, 'history_' + new Date().getTime() + '.csv', 'text/csv');
+    }
+
+    function exportHistoryJSON() {
+      const json = JSON.stringify(historyState.filteredHistory, null, 2);
+      downloadFile(json, 'history_' + new Date().getTime() + '.json', 'application/json');
+    }
+
+    function downloadFile(content, filename, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function updateScanCount() {
+      fetch('/history').then(r => r.json()).then(data => {
+        document.getElementById('scanCount').textContent = data.length;
+      });
+    }
+
+    // ─── Zoom ───
+    function openZoom(src) {
+      document.getElementById('zoomImg').src = src;
+      document.getElementById('zoomModal').classList.add('active');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('zoomModal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    // ─── API Guide ───
+    function showAPIGuide() {
+      document.getElementById('apiModal').classList.add('active');
+    }
+
+    // ─── Init ───
+    loadHistory();
+    updateScanCount();
+    document.getElementById('viewGrid').classList.add('active');
+    document.getElementById('viewList').classList.remove('active');
+
+    // ─── Ambient ring + cursor-reactive particle system (canvas) ───
+    (function(){
+      const canvas = document.getElementById('cursorCanvas');
+      if(!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let W = canvas.width = window.innerWidth;
+      let H = canvas.height = window.innerHeight;
+      window.addEventListener('resize', ()=>{ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+
+      // Ambient soft cloud configuration (replacing ring)
+      const center = { x: W/2, y: H/2 };
+      const AMBIENT_COUNT = Math.max(160, Math.floor(Math.min(600, (W * H) / 14000)));
+      const ambient = [];
+      const colors = ['#06f0ea','#00d9ff','#38bdf8','#60a5fa'];
+
+      // Create a soft elliptical cloud of ambient particles centered under the hero
+      const cloudRx = Math.max(120, Math.min(W * 0.45, 700));
+      const cloudRy = Math.max(80, Math.min(H * 0.25, 320));
+      for(let i=0;i<AMBIENT_COUNT;i++){
+        // sample elliptical gaussian-ish offsets
+        const u = Math.random();
+        const r = Math.sqrt(u) * (0.6 + Math.random() * 0.9);
+        const theta = Math.random() * Math.PI * 2;
+        const bx = center.x + Math.cos(theta) * r * cloudRx + (Math.random()-0.5) * 12;
+        const by = center.y + Math.sin(theta) * r * cloudRy + (Math.random()-0.5) * 6 - 40; // lift slightly upward
+        ambient.push({ baseX: bx, baseY: by, x: bx + (Math.random()-0.5)*6, y: by + (Math.random()-0.5)*6, vx:0, vy:0, size: 0.6 + Math.random()*2.0, col: colors[Math.floor(Math.random()*colors.length)], phase: Math.random()*Math.PI*2, alpha: 0.28 });
+      }
+
+      // cursor burst particles
+      const bursts = [];
+      const maxBursts = 900;
+
+      let lastX = W/2, lastY = H/2, lastTime = performance.now();
+      let mouseX = W/2, mouseY = H/2;
+
+      window.addEventListener('mousemove', (e)=>{
+        const now = performance.now();
+        const dx = e.clientX - lastX, dy = e.clientY - lastY;
+        const dt = Math.max(12, now - lastTime);
+        const vel = Math.sqrt(dx*dx + dy*dy) / dt * 60;
+        lastX = e.clientX; lastY = e.clientY; lastTime = now;
+        mouseX = e.clientX; mouseY = e.clientY;
+        const count = 3 + Math.min(18, Math.round(vel * 0.08));
+        for(let i=0;i<count;i++){
+          if(bursts.length > maxBursts) bursts.shift();
+          const ang = Math.random()*Math.PI*2;
+          const sp = 0.6 + Math.random()*2.6 + vel*0.02;
+          bursts.push({ x: mouseX + (Math.random()-0.5)*4, y: mouseY + (Math.random()-0.5)*4, vx: Math.cos(ang)*sp, vy: Math.sin(ang)*sp, size: 0.8 + Math.random()*2.6, life: 30 + Math.random()*80, age: 0, col: colors[Math.floor(Math.random()*colors.length)] });
+        }
+      }, {passive:true});
+
+      function animate(){
+        ctx.clearRect(0,0,W,H);
+        // faint grid overlay for depth
+        ctx.save();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(10,18,28,0.06)';
+        const gridSize = Math.max(80, Math.min(160, Math.floor(W/12)));
+        for(let gx = (center.x % gridSize) - gridSize; gx < W + gridSize; gx += gridSize){
+          ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke();
+        }
+        for(let gy = (center.y % gridSize) - gridSize; gy < H + gridSize; gy += gridSize){
+          ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+        }
+        ctx.restore();
+        const t = performance.now() * 0.001;
+        const influence = Math.max(120, Math.min(280, Math.min(W,H) * 0.12));
+
+        // ambient motion and reaction
+        for(let i=0;i<ambient.length;i++){
+          const p = ambient[i];
+          const osc = Math.sin(t * 0.6 + p.phase) * 6;
+          const targetX = p.baseX + Math.cos(p.phase) * osc * 0.6;
+          const targetY = p.baseY + Math.sin(p.phase) * osc * 0.6;
+
+          const dx = p.x - mouseX, dy = p.y - mouseY;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if(dist < influence){
+            const force = (1 - (dist / influence)) * 2.2;
+            p.vx += (dx / (dist + 0.001)) * force;
+            p.vy += (dy / (dist + 0.001)) * force;
+            p.alpha = Math.min(0.9, p.alpha + 0.025);
+            p.size = Math.min(3.2, p.size + 0.06);
+          } else {
+            p.alpha = Math.max(0.30, p.alpha - 0.003);
+            p.size = Math.max(0.8, p.size - 0.01);
+            p.vx += (targetX - p.x) * 0.004;
+            p.vy += (targetY - p.y) * 0.004;
+          }
+
+          p.vx *= 0.92; p.vy *= 0.92;
+          p.x += p.vx; p.y += p.vy;
+
+          ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha));
+          ctx.fillStyle = p.col;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+          ctx.fill();
+        }
+
+        // sparse mesh connections (cooler, subtler)
+        ctx.lineWidth = 0.6;
+        for(let aIdx = 0; aIdx < ambient.length; aIdx+=1){
+          const a = ambient[aIdx];
+          // connect only to a few forward neighbors to keep it sparse
+          for(let bIdx = aIdx + 1; bIdx < Math.min(ambient.length, aIdx + 5); bIdx++){
+            const b = ambient[bIdx];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const dist2 = dx*dx + dy*dy;
+            const maxD = 110 * 110;
+            if(dist2 < maxD){
+              const alpha = (1 - dist2 / maxD) * 0.08 * Math.min(1, (a.alpha + b.alpha) / 1.0);
+              // blend toward cyan tone for lines
+              ctx.strokeStyle = 'rgba(6,240,234,1)';
+              ctx.globalAlpha = alpha;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+        }
+        ctx.globalAlpha = 1;
+
+        // bursts
+        for(let i = bursts.length - 1; i>=0; i--){
+          const b = bursts[i];
+          b.x += b.vx; b.y += b.vy;
+          b.vy += 0.02; b.vx *= 0.995; b.vy *= 0.995;
+          b.age++;
+          const tt = b.age / b.life;
+          ctx.globalAlpha = Math.max(0, 0.6 * (1 - tt));
+          ctx.fillStyle = b.col;
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, Math.max(0.6, b.size * (1 - tt*0.7)), 0, Math.PI*2);
+          ctx.fill();
+          if(b.age >= b.life) bursts.splice(i,1);
+        }
+
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(animate);
+      }
+
+      requestAnimationFrame(animate);
+    })();
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Report - Deep Forensics</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --card: rgba(30, 41, 59, 0.7);
+            --accent: #38bdf8;
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .panel {
+            background: var(--card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: var(--text);
+        }
+
+        .label {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .analysis-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        textarea,
+        input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            padding: 1rem;
+            font-size: 1rem;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .img-preview {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .verdict-tag {
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .forged {
+            background: #f43f5e;
+            color: white;
+        }
+
+        .authentic {
+            background: #10b981;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <a href="/" style="color:var(--accent); text-decoration:none; font-size:0.9rem">← Back to Dashboard</a>
+                <h1 style="margin-top:0.5rem">Professional Forensic Report</h1>
+            </div>
+            <div class="label">ID: {{ record.analysis_id }}</div>
+        </div>
+
+        <div class="panel">
+            <h3>Analysis Overview</h3>
+            <div class="analysis-summary">
+                <div>
+                    <div class="label">Original File</div>
+                    <div>{{ record.original_filename }}</div>
+                </div>
+                <div>
+                    <div class="label">Verdict</div>
+                    <div>
+                        <span class="verdict-tag {{ 'forged' if record.detected else 'authentic' }}">
+                            {{ 'FORGED' if record.detected else 'AUTHENTIC' }}
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <div class="label">Confidence Level</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">{{ record.confidence }}%
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem">
+                <div>
+                    <div class="label">Detection Heatmap</div>
+                    {% if record.result_image %}
+                    <img src="/static/results/{{ record.result_image.split('/')[-1] if '/' in record.result_image else record.result_image }}"
+                        class="img-preview">
+                    {% elif record.type == 'comparison' %}
+                    <p style="color:var(--text-dim)">Multi-algorithm comparison view. Check specific methods below.</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <div class="label">System Metadata</div>
+                    <pre
+                        style="font-size:0.8rem; color:var(--text-dim); background:rgba(0,0,0,0.2); padding:1rem; border-radius:8px; overflow:auto; max-height:300px">
+Timestamp: {{ record.timestamp }}
+Keypoints: {{ record.total_keypoints }}
+Matches: {{ record.total_matches }}
+Suspicious: {{ record.suspicious_pairs }}
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>Enhanced Reporting</h3>
+            <p style="color:var(--text-dim); margin-bottom:1.5rem">Add your expert observations and final conclusions to
+                this report.</p>
+
+            <form action="/report/save" method="POST">
+                <input type="hidden" name="analysis_id" value="{{ record.analysis_id }}">
+
+                <div class="form-group">
+                    <label>Expert Observations (Notes)</label>
+                    <textarea name="notes"
+                        placeholder="Describe suspicious artifacts, unusual textures, or metadata inconsistencies...">{{ record.custom_notes or '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Final Professional Conclusion</label>
+                    <input type="text" name="conclusion" value="{{ record.custom_conclusion or '' }}"
+                        placeholder="e.g. Image shows clear evidence of localized splicing.">
+                </div>
+
+                <div style="display:flex; gap:1rem; margin-top:2rem">
+                    <button type="submit" class="btn btn-primary">Save & Finalize</button>
+                    <a href="/report/{{ record.analysis_id }}" class="btn btn-secondary">Preview Download</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

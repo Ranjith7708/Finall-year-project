@@ -1,0 +1,687 @@
+[
+  {
+    "detected": true,
+    "confidence": 100,
+    "total_keypoints": 1001,
+    "total_matches": 142,
+    "suspicious_pairs": 85,
+    "clusters_found": 5,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\482538ff999844399ee37991af8e0588_result.jpg",
+    "message": "Copy-move forgery detected with 100% confidence.",
+    "uploaded_image_url": "/static/uploads/482538ff999844399ee37991af8e0588.png",
+    "result_image_url": "/static/results/482538ff999844399ee37991af8e0588_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "critical",
+      "label": "Critical",
+      "color": "#ff1744"
+    },
+    "analysis_id": "f2194ae29efb",
+    "timestamp": "2026-02-24T12:10:32.335633",
+    "original_filename": "Gemini_Generated_Image_kqmca1kqmca1kqmc.png",
+    "confidence_breakdown": {
+      "similarity_score": 11,
+      "texture_match_score": 35,
+      "region_duplication_score": 85
+    },
+    "image_hash": "e2dc000ec443cdfd",
+    "blockchain": {
+      "block_hash": "d8e73bf839c55a6c",
+      "previous_hash": "0000000000000000",
+      "timestamp": "2026-02-24T12:10:32",
+      "analysis_id": "f2194ae29efb",
+      "verified": true
+    }
+  },
+  {
+    "detected": true,
+    "confidence": 85,
+    "total_keypoints": 1000,
+    "total_matches": 189,
+    "suspicious_pairs": 54,
+    "clusters_found": 3,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\dbeb73480de64f07bde6f0d15ba927c9_result.jpg",
+    "message": "Copy-move forgery detected with 85% confidence.",
+    "uploaded_image_url": "/static/uploads/dbeb73480de64f07bde6f0d15ba927c9.png",
+    "result_image_url": "/static/results/dbeb73480de64f07bde6f0d15ba927c9_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "critical",
+      "label": "Critical",
+      "color": "#ff1744"
+    },
+    "analysis_id": "0b551c3cac79",
+    "timestamp": "2026-02-24T11:58:11.859448",
+    "original_filename": "Gemini_Generated_Image_7dljpc7dljpc7dlj.png"
+  },
+  {
+    "detected": false,
+    "confidence": 0,
+    "total_keypoints": 0,
+    "total_matches": 0,
+    "suspicious_pairs": 0,
+    "clusters_found": 0,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\db4db7b5d94f45fd95566b584f5cfdc3_result.jpg",
+    "message": "No copy-move forgery detected. Image appears authentic.",
+    "uploaded_image_url": "/static/uploads/db4db7b5d94f45fd95566b584f5cfdc3.png",
+    "result_image_url": "/static/results/db4db7b5d94f45fd95566b584f5cfdc3_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "none",
+      "label": "Authentic",
+      "color": "#00e676"
+    },
+    "analysis_id": "35e74c75b5b2",
+    "timestamp": "2026-02-24T11:58:04.642618",
+    "original_filename": "SSC_photo_15KB.png"
+  },
+  {
+    "detected": false,
+    "confidence": 0,
+    "total_keypoints": 0,
+    "total_matches": 0,
+    "suspicious_pairs": 0,
+    "clusters_found": 0,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\0c1cb9ed98a149c8a1cbc4160aaab8d1_result.jpg",
+    "message": "No copy-move forgery detected. Image appears authentic.",
+    "uploaded_image_url": "/static/uploads/0c1cb9ed98a149c8a1cbc4160aaab8d1.png",
+    "result_image_url": "/static/results/0c1cb9ed98a149c8a1cbc4160aaab8d1_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "none",
+      "label": "Authentic",
+      "color": "#00e676"
+    },
+    "analysis_id": "af60295ecf18",
+    "timestamp": "2026-02-24T11:58:03.577210",
+    "original_filename": "SSC_photo_15KB.png"
+  },
+  {
+    "detected": false,
+    "confidence": 0,
+    "total_keypoints": 0,
+    "total_matches": 0,
+    "suspicious_pairs": 0,
+    "clusters_found": 0,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\478db8bc970f40f9ab244f5019af7700_result.jpg",
+    "message": "No copy-move forgery detected. Image appears authentic.",
+    "uploaded_image_url": "/static/uploads/478db8bc970f40f9ab244f5019af7700.png",
+    "result_image_url": "/static/results/478db8bc970f40f9ab244f5019af7700_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "none",
+      "label": "Authentic",
+      "color": "#00e676"
+    },
+    "analysis_id": "bf7e6e9f695b",
+    "timestamp": "2026-02-24T11:57:58.360121",
+    "original_filename": "SSC_photo_15KB.png"
+  },
+  {
+    "detected": true,
+    "confidence": 55,
+    "total_keypoints": 1000,
+    "total_matches": 161,
+    "suspicious_pairs": 30,
+    "clusters_found": 4,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\4285f54014b04671af9bb9c985fcbca8_result.jpg",
+    "message": "Copy-move forgery detected with 55% confidence.",
+    "uploaded_image_url": "/static/uploads/4285f54014b04671af9bb9c985fcbca8.png",
+    "result_image_url": "/static/results/4285f54014b04671af9bb9c985fcbca8_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "medium",
+      "label": "Medium",
+      "color": "#ff9800"
+    },
+    "analysis_id": "9484b2009b49",
+    "timestamp": "2026-02-24T11:57:35.607911",
+    "original_filename": "Gemini_Generated_Image_kqmca1kqmca1kqmc.png",
+    "confidence_breakdown": {
+      "similarity_score": 12,
+      "texture_match_score": 11,
+      "region_duplication_score": 30
+    },
+    "image_hash": "e2dc000ec443cdfd",
+    "blockchain": {
+      "block_hash": "55234bf50c2f13fe",
+      "previous_hash": "0000000000000000",
+      "timestamp": "2026-02-24T11:57:35",
+      "analysis_id": "9484b2009b49",
+      "verified": true
+    }
+  },
+  {
+    "detected": true,
+    "confidence": 85,
+    "total_keypoints": 1000,
+    "total_matches": 189,
+    "suspicious_pairs": 54,
+    "clusters_found": 3,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\6d2d12a142bd400ab4ea095cd1174648_result.jpg",
+    "message": "Copy-move forgery detected with 85% confidence.",
+    "uploaded_image_url": "/static/uploads/6d2d12a142bd400ab4ea095cd1174648.png",
+    "result_image_url": "/static/results/6d2d12a142bd400ab4ea095cd1174648_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "critical",
+      "label": "Critical",
+      "color": "#ff1744"
+    },
+    "analysis_id": "7245bf9d2e16",
+    "timestamp": "2026-02-24T11:48:55.753070",
+    "original_filename": "Gemini_Generated_Image_7dljpc7dljpc7dlj.png",
+    "confidence_breakdown": {
+      "similarity_score": 15,
+      "texture_match_score": 17,
+      "region_duplication_score": 54
+    },
+    "image_hash": "921d00541b14ad0e",
+    "blockchain": {
+      "block_hash": "3009570625503bde",
+      "previous_hash": "0000000000000000",
+      "timestamp": "2026-02-24T11:48:55",
+      "analysis_id": "7245bf9d2e16",
+      "verified": true
+    }
+  },
+  {
+    "detected": true,
+    "confidence": 85,
+    "total_keypoints": 1000,
+    "total_matches": 189,
+    "suspicious_pairs": 54,
+    "clusters_found": 3,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\fbec6955c5fa432980b3a7073b1f4655_result.jpg",
+    "message": "Copy-move forgery detected with 85% confidence.",
+    "uploaded_image_url": "/static/uploads/fbec6955c5fa432980b3a7073b1f4655.png",
+    "result_image_url": "/static/results/fbec6955c5fa432980b3a7073b1f4655_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "critical",
+      "label": "Critical",
+      "color": "#ff1744"
+    },
+    "analysis_id": "a0524c0e992d",
+    "timestamp": "2026-02-24T11:41:52.932993",
+    "original_filename": "Gemini_Generated_Image_7dljpc7dljpc7dlj.png"
+  },
+  {
+    "detected": true,
+    "confidence": 85,
+    "total_keypoints": 1000,
+    "total_matches": 189,
+    "suspicious_pairs": 54,
+    "clusters_found": 3,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\dd7540c65c6641319b1b44cc9555f4c7_result.jpg",
+    "message": "Copy-move forgery detected with 85% confidence.",
+    "uploaded_image_url": "/static/uploads/dd7540c65c6641319b1b44cc9555f4c7.png",
+    "result_image_url": "/static/results/dd7540c65c6641319b1b44cc9555f4c7_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "critical",
+      "label": "Critical",
+      "color": "#ff1744"
+    },
+    "analysis_id": "0d3b5f33cca2",
+    "timestamp": "2026-02-24T11:36:31.213765",
+    "original_filename": "Gemini_Generated_Image_7dljpc7dljpc7dlj.png"
+  },
+  {
+    "detected": true,
+    "confidence": 55,
+    "total_keypoints": 1000,
+    "total_matches": 161,
+    "suspicious_pairs": 30,
+    "clusters_found": 4,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\4f09f21961154bf58df8b3ed2f7a78a0_result.jpg",
+    "message": "Copy-move forgery detected with 55% confidence.",
+    "uploaded_image_url": "/static/uploads/4f09f21961154bf58df8b3ed2f7a78a0.png",
+    "result_image_url": "/static/results/4f09f21961154bf58df8b3ed2f7a78a0_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "medium",
+      "label": "Medium",
+      "color": "#ff9800"
+    },
+    "analysis_id": "54d26153e615",
+    "timestamp": "2026-02-24T11:21:51.828829",
+    "original_filename": "Gemini_Generated_Image_kqmca1kqmca1kqmc.png"
+  },
+  {
+    "detected": true,
+    "confidence": 85,
+    "total_keypoints": 1000,
+    "total_matches": 189,
+    "suspicious_pairs": 54,
+    "clusters_found": 3,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\50fcdf7945c941878a2f51fcfcff7b2c_result.jpg",
+    "message": "Copy-move forgery detected with 85% confidence.",
+    "uploaded_image_url": "/static/uploads/50fcdf7945c941878a2f51fcfcff7b2c.png",
+    "result_image_url": "/static/results/50fcdf7945c941878a2f51fcfcff7b2c_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "critical",
+      "label": "Critical",
+      "color": "#ff1744"
+    },
+    "analysis_id": "fff735c62273",
+    "timestamp": "2026-02-24T11:21:51.591818",
+    "original_filename": "Gemini_Generated_Image_7dljpc7dljpc7dlj.png"
+  },
+  {
+    "detected": true,
+    "confidence": 55,
+    "total_keypoints": 1000,
+    "total_matches": 161,
+    "suspicious_pairs": 30,
+    "clusters_found": 4,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\22924b71059f4ecf8369fbcf50a8a34b_result.jpg",
+    "message": "Copy-move forgery detected with 55% confidence.",
+    "uploaded_image_url": "/static/uploads/22924b71059f4ecf8369fbcf50a8a34b.png",
+    "result_image_url": "/static/results/22924b71059f4ecf8369fbcf50a8a34b_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "medium",
+      "label": "Medium",
+      "color": "#ff9800"
+    },
+    "analysis_id": "15acd4f070cd",
+    "timestamp": "2026-02-24T11:21:43.795563",
+    "original_filename": "Gemini_Generated_Image_kqmca1kqmca1kqmc.png"
+  },
+  {
+    "detected": true,
+    "confidence": 85,
+    "total_keypoints": 1000,
+    "total_matches": 189,
+    "suspicious_pairs": 54,
+    "clusters_found": 3,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\46b16afffe8a449fbbb11d34f8041f73_result.jpg",
+    "message": "Copy-move forgery detected with 85% confidence.",
+    "uploaded_image_url": "/static/uploads/46b16afffe8a449fbbb11d34f8041f73.png",
+    "result_image_url": "/static/results/46b16afffe8a449fbbb11d34f8041f73_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "critical",
+      "label": "Critical",
+      "color": "#ff1744"
+    },
+    "analysis_id": "1bb61d1df35d",
+    "timestamp": "2026-02-24T11:21:43.575636",
+    "original_filename": "Gemini_Generated_Image_7dljpc7dljpc7dlj.png"
+  },
+  {
+    "detected": true,
+    "confidence": 85,
+    "total_keypoints": 1000,
+    "total_matches": 189,
+    "suspicious_pairs": 54,
+    "clusters_found": 3,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\e15c4f912ac54be9b51144a7211b0ca4_result.jpg",
+    "message": "Copy-move forgery detected with 85% confidence.",
+    "uploaded_image_url": "/static/uploads/e15c4f912ac54be9b51144a7211b0ca4.png",
+    "result_image_url": "/static/results/e15c4f912ac54be9b51144a7211b0ca4_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "critical",
+      "label": "Critical",
+      "color": "#ff1744"
+    },
+    "analysis_id": "586606341eb2",
+    "timestamp": "2026-02-24T11:21:10.520893",
+    "original_filename": "Gemini_Generated_Image_7dljpc7dljpc7dlj.png"
+  },
+  {
+    "detected": true,
+    "confidence": 85,
+    "total_keypoints": 1000,
+    "total_matches": 189,
+    "suspicious_pairs": 54,
+    "clusters_found": 3,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\b97433775bd345ed8548638bf6d93b77_result.jpg",
+    "message": "Copy-move forgery detected with 85% confidence.",
+    "uploaded_image_url": "/static/uploads/b97433775bd345ed8548638bf6d93b77.png",
+    "result_image_url": "/static/results/b97433775bd345ed8548638bf6d93b77_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "critical",
+      "label": "Critical",
+      "color": "#ff1744"
+    },
+    "analysis_id": "0a1edcb86d7f",
+    "timestamp": "2026-02-24T11:09:37.815120",
+    "original_filename": "Gemini_Generated_Image_7dljpc7dljpc7dlj.png"
+  },
+  {
+    "detected": true,
+    "confidence": 55,
+    "total_keypoints": 613,
+    "total_matches": 88,
+    "suspicious_pairs": 5,
+    "clusters_found": 2,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\135fd0886d534066864d4594974ebab1_result.jpg",
+    "message": "Copy-move forgery detected with 55% confidence.",
+    "uploaded_image_url": "/static/uploads/135fd0886d534066864d4594974ebab1.png",
+    "result_image_url": "/static/results/135fd0886d534066864d4594974ebab1_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "medium",
+      "label": "Medium",
+      "color": "#ff9800"
+    },
+    "analysis_id": "aba9b8e2e1c8",
+    "timestamp": "2026-02-22T22:07:51.763651",
+    "original_filename": "test.png"
+  },
+  {
+    "detected": true,
+    "confidence": 55,
+    "total_keypoints": 613,
+    "total_matches": 88,
+    "suspicious_pairs": 5,
+    "clusters_found": 2,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\a5186caf95e646c2910c4fd5bfe132f3_result.jpg",
+    "message": "Copy-move forgery detected with 55% confidence.",
+    "uploaded_image_url": "/static/uploads/a5186caf95e646c2910c4fd5bfe132f3.png",
+    "result_image_url": "/static/results/a5186caf95e646c2910c4fd5bfe132f3_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "medium",
+      "label": "Medium",
+      "color": "#ff9800"
+    },
+    "analysis_id": "f1e527902e84",
+    "timestamp": "2026-02-22T22:05:23.859405",
+    "original_filename": "test.png"
+  },
+  {
+    "detected": true,
+    "confidence": 55,
+    "total_keypoints": 613,
+    "total_matches": 88,
+    "suspicious_pairs": 5,
+    "clusters_found": 2,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\e72bbc47b4f44dc293d8628b3f2671d4_result.jpg",
+    "message": "Copy-move forgery detected with 55% confidence.",
+    "uploaded_image_url": "/static/uploads/e72bbc47b4f44dc293d8628b3f2671d4.png",
+    "result_image_url": "/static/results/e72bbc47b4f44dc293d8628b3f2671d4_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "medium",
+      "label": "Medium",
+      "color": "#ff9800"
+    },
+    "analysis_id": "5459d918eab4",
+    "timestamp": "2026-02-22T22:02:25.905998",
+    "original_filename": "test.png"
+  },
+  {
+    "detected": true,
+    "confidence": 55,
+    "total_keypoints": 613,
+    "total_matches": 88,
+    "suspicious_pairs": 5,
+    "clusters_found": 2,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\c151ee0b682440119f403599103cceb7_result.jpg",
+    "message": "Copy-move forgery detected with 55% confidence.",
+    "uploaded_image_url": "/static/uploads/c151ee0b682440119f403599103cceb7.jpg",
+    "result_image_url": "/static/results/c151ee0b682440119f403599103cceb7_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "medium",
+      "label": "Medium",
+      "color": "#ff9800"
+    },
+    "analysis_id": "a7e59a7339db",
+    "timestamp": "2026-02-22T21:56:04.437118",
+    "original_filename": "test_forged.jpg"
+  },
+  {
+    "detected": true,
+    "confidence": 55,
+    "total_keypoints": 613,
+    "total_matches": 88,
+    "suspicious_pairs": 5,
+    "clusters_found": 2,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\e8c4d8763f9841668da82dfe96c939fe_result.jpg",
+    "message": "Copy-move forgery detected with 55% confidence.",
+    "uploaded_image_url": "/static/uploads/e8c4d8763f9841668da82dfe96c939fe.jpg",
+    "result_image_url": "/static/results/e8c4d8763f9841668da82dfe96c939fe_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [
+        "No EXIF metadata found. This may indicate the image was stripped or re-saved."
+      ],
+      "tampering_indicators": [
+        "missing_exif"
+      ]
+    },
+    "severity": {
+      "level": "medium",
+      "label": "Medium",
+      "color": "#ff9800"
+    },
+    "analysis_id": "7a8bec2d8cc1",
+    "timestamp": "2026-02-22T21:55:49.257143",
+    "original_filename": "test_forged.jpg"
+  },
+  {
+    "detected": true,
+    "confidence": 85,
+    "total_keypoints": 1000,
+    "total_matches": 189,
+    "suspicious_pairs": 54,
+    "clusters_found": 3,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\bccd0575c34b450fb7a7e170340c5f78_result.jpg",
+    "message": "Copy-move forgery detected with 85% confidence.",
+    "uploaded_image_url": "/static/uploads/bccd0575c34b450fb7a7e170340c5f78.png",
+    "result_image_url": "/static/results/bccd0575c34b450fb7a7e170340c5f78_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [],
+      "tampering_indicators": []
+    },
+    "severity": "CRITICAL",
+    "analysis_id": "47e4185541f0",
+    "confidence_breakdown": {
+      "similarity_score": 15,
+      "texture_match_score": 17,
+      "region_duplication_score": 54
+    },
+    "image_hash": "921d00541b14ad0e",
+    "blockchain": {
+      "block_hash": "95a2857368193150",
+      "timestamp": "2026-02-24T12:33:17.295393",
+      "image_hash": "921d00541b14ad0e",
+      "verified": true
+    },
+    "original_filename": "Gemini_Generated_Image_7dljpc7dljpc7dlj.png",
+    "timestamp": "2026-02-24T12:33:17.295393"
+  },
+  {
+    "detected": true,
+    "confidence": 100,
+    "total_keypoints": 1001,
+    "total_matches": 142,
+    "suspicious_pairs": 85,
+    "clusters_found": 5,
+    "result_image": "C:\\Users\\ranji\\Downloads\\files (1)\\static\\results\\e39ea67e580240b79bf966ee34ffcba6_result.jpg",
+    "message": "Copy-move forgery detected with 100% confidence.",
+    "uploaded_image_url": "/static/uploads/e39ea67e580240b79bf966ee34ffcba6.png",
+    "result_image_url": "/static/results/e39ea67e580240b79bf966ee34ffcba6_result.jpg",
+    "metadata": {
+      "tags": {},
+      "warnings": [],
+      "tampering_indicators": []
+    },
+    "severity": "CRITICAL",
+    "analysis_id": "f9b02366a2c4",
+    "confidence_breakdown": {
+      "similarity_score": 11,
+      "texture_match_score": 35,
+      "region_duplication_score": 85
+    },
+    "image_hash": "e2dc000ec443cdfd",
+    "blockchain": {
+      "block_hash": "ef6351d23ecebc8b",
+      "timestamp": "2026-02-24T13:51:04.188274",
+      "image_hash": "e2dc000ec443cdfd",
+      "verified": true
+    },
+    "original_filename": "Gemini_Generated_Image_kqmca1kqmca1kqmc.png",
+    "timestamp": "2026-02-24T13:51:04.188274"
+  }
+]

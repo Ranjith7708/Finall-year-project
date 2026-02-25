@@ -1,0 +1,26 @@
+# Environment
+.env
+.venv/
+venv/
+env/
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Project specific
+static/uploads/*
+!static/uploads/.gitkeep
+static/results/*
+!static/results/.gitkeep
+*.db
+*.log
+
+# IDEs
+.vscode/
+.idea/
+.gemini/
