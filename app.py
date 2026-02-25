@@ -58,8 +58,16 @@ def load_user(user_id):
         return None
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
-RESULTS_FOLDER = os.path.join(BASE_DIR, "static", "results")
+
+# On Vercel, only /tmp is writable; use it for uploads/results
+_ON_VERCEL = os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV")
+if _ON_VERCEL:
+    UPLOAD_FOLDER = "/tmp/uploads"
+    RESULTS_FOLDER = "/tmp/results"
+else:
+    UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
+    RESULTS_FOLDER = os.path.join(BASE_DIR, "static", "results")
+
 HISTORY_FILE = os.path.join(BASE_DIR, "analysis_history.json")
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -67,6 +75,7 @@ app.config["RESULTS_FOLDER"] = RESULTS_FOLDER
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULTS_FOLDER, exist_ok=True)
+
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "bmp", "tiff", "webp"}
 
