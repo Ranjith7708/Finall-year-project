@@ -27,7 +27,10 @@ app.secret_key = "forensics-secret-key"  # Required for sessions
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB max upload
 
 # ── MongoDB Setup ────────────────────────────────────────────────────────────
-# Default values to prevent NameError if connection fails
+# Replace with your Atlas connection string
+MONGO_URI = os.environ.get("MONGO_URI", "mongodb+srv://user:pass@cluster.mongodb.net/forensics?retryWrites=true&w=majority")
+
+# Default values to prevent NameErrors if connection fails
 db = None
 users_col = None
 history_col = None
