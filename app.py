@@ -27,15 +27,20 @@ app.secret_key = "forensics-secret-key"  # Required for sessions
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB max upload
 
 # ── MongoDB Setup ────────────────────────────────────────────────────────────
-# Replace with your Atlas connection string
-MONGO_URI = os.environ.get("MONGO_URI", "mongodb+srv://user:pass@cluster.mongodb.net/forensics?retryWrites=true&w=majority")
+# Default values to prevent NameError if connection fails
+db = None
+users_col = None
+history_col = None
+
 try:
-    client = MongoClient(MONGO_URI)
+    client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
     # If URI doesn't have a db name, use 'forensics'
     db_name = MONGO_URI.split('/')[-1].split('?')[0] or 'forensics'
     db = client[db_name]
     users_col = db.users
     history_col = db.history
+    # Test connection
+    client.admin.command('ping')
 except Exception as e:
     print(f"[ERROR] Failed to connect to MongoDB: {e}")
 
@@ -51,6 +56,8 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
+    if users_col is None:
+        return None
     try:
         user_doc = users_col.find_one({"_id": ObjectId(user_id)})
         return User(user_doc) if user_doc else None
@@ -89,6 +96,9 @@ def allowed_file(filename):
 # ── History helpers ───────────────────────────────────────────────────────────
 
 def _load_history():
+    if history_col is None:
+        print("[WARNING] history_col is None, database might be disconnected.")
+        return []
     try:
         # Get last 100 entries, newest first
         history = list(history_col.find().sort("timestamp", -1).limit(100))
@@ -101,6 +111,9 @@ def _load_history():
 
 
 def _append_history(record):
+    if history_col is None:
+        print("[ERROR] history_col is None, cannot append history.")
+        return
     try:
         if isinstance(record.get("timestamp"), datetime.datetime):
             pass # already datetime if generated here usually, but app.py uses ISO strings
@@ -541,6 +554,10 @@ def save_report_notes():
     if not analysis_id:
         return jsonify({"error": "Missing analysis ID"}), 400
 
+    if history_col is None:
+        flash("Database disconnected", "error")
+        return redirect(url_for("index"))
+
     # Update record
     result = history_col.update_one(
         {"analysis_id": analysis_id},
@@ -562,6 +579,8 @@ def save_report_notes():
 @app.route("/report/<analysis_id>")
 @login_required
 def report(analysis_id):
+    if history_col is None:
+        return jsonify({"error": "Database disconnected"}), 503
     try:
         from bson import ObjectId
         record = history_col.find_one({"analysis_id": analysis_id})
