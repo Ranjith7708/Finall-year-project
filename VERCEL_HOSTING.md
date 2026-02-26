@@ -24,6 +24,8 @@ There are two main ways to deploy:
 2.  Go to [Vercel Dashboard](https://vercel.com/dashboard).
 3.  Click **Add New...** > **Project**.
 4.  Import your GitHub repository.
+5.  **Critically Important**: In the "Framework Preset" dropdown, select **Other**. 
+    - Since we have a custom `vercel.json` and `api/` folder, choosing the "Flask" preset can sometimes override our settings and cause the 500 error you are seeing.
 
 #### Option B: Via Vercel CLI
 1.  Open your terminal in the project folder.
