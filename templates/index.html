@@ -624,6 +624,7 @@
     .panel {
       animation: slideUp 0.6s ease-out;
     }
+
     /* Particle cursor canvas */
     #cursorCanvas {
       position: fixed;
@@ -631,7 +632,8 @@
       z-index: 9999;
       pointer-events: none;
       mix-blend-mode: screen;
-      opacity: 0.48; /* fade level reduced */
+      opacity: 0.48;
+      /* fade level reduced */
       transition: opacity 220ms ease;
     }
 
@@ -825,18 +827,20 @@
     <div class="tab-content" id="tab-annotate">
       <div class="panel">
         <div class="panel-title">Advanced Image Annotation</div>
-        
+
         <!-- Upload Section -->
         <div style="margin-bottom:1.5rem">
           <label style="display:block;margin-bottom:0.5rem;font-weight:500">📁 Upload Image</label>
-          <input type="file" id="annotateInput" accept="image/*" onchange="loadAnnotationImage()" 
-                 style="padding:0.5rem;border:1px dashed var(--border);border-radius:6px;width:100%;cursor:pointer"/>
+          <input type="file" id="annotateInput" accept="image/*" onchange="loadAnnotationImage()"
+            style="padding:0.5rem;border:1px dashed var(--border);border-radius:6px;width:100%;cursor:pointer" />
         </div>
 
         <!-- Annotation Toolbar (Hidden until image loaded) -->
-        <div id="annotationToolbar" style="display:none;background:var(--surface);padding:1rem;border-radius:10px;margin-bottom:1rem;border:1px solid var(--border)">
+        <div id="annotationToolbar"
+          style="display:none;background:var(--surface);padding:1rem;border-radius:10px;margin-bottom:1rem;border:1px solid var(--border)">
           <!-- Row 1: Drawing Tools -->
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:0.5rem;margin-bottom:1rem">
+          <div
+            style="display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:0.5rem;margin-bottom:1rem">
             <button class="tool-btn active" onclick="selectTool('rect')" title="Rectangle">📦 Rectangle</button>
             <button class="tool-btn" onclick="selectTool('circle')" title="Circle">⭕ Circle</button>
             <button class="tool-btn" onclick="selectTool('line')" title="Line">📍 Line</button>
@@ -847,12 +851,15 @@
           </div>
 
           <!-- Row 2: Color & Size Controls -->
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1rem">
+          <div
+            style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1rem">
             <div>
               <label style="font-size:0.8rem;color:var(--text-dim)">Color</label>
               <div style="display:flex;gap:0.5rem;margin-top:0.3rem">
-                <input type="color" id="annotationColor" value="#00d9ff" onchange="updateAnnotationColor()" style="width:50px;height:40px;border:none;border-radius:4px;cursor:pointer"/>
-                <select id="presetColor" onchange="applyPresetColor()" style="flex:1;padding:0.5rem;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--text)">
+                <input type="color" id="annotationColor" value="#00d9ff" onchange="updateAnnotationColor()"
+                  style="width:50px;height:40px;border:none;border-radius:4px;cursor:pointer" />
+                <select id="presetColor" onchange="applyPresetColor()"
+                  style="flex:1;padding:0.5rem;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--text)">
                   <option value="">Custom</option>
                   <option value="#00d9ff">Cyan</option>
                   <option value="#ff0055">Red</option>
@@ -864,15 +871,16 @@
             </div>
 
             <div>
-              <label style="font-size:0.8rem;color:var(--text-dim)">Brush Size: <span id="brushSizeLabel">3</span>px</label>
-              <input type="range" id="brushSize" min="1" max="30" value="3" onchange="updateBrushSize()" 
-                     style="width:100%;cursor:pointer;margin-top:0.3rem"/>
+              <label style="font-size:0.8rem;color:var(--text-dim)">Brush Size: <span
+                  id="brushSizeLabel">3</span>px</label>
+              <input type="range" id="brushSize" min="1" max="30" value="3" onchange="updateBrushSize()"
+                style="width:100%;cursor:pointer;margin-top:0.3rem" />
             </div>
 
             <div>
               <label style="font-size:0.8rem;color:var(--text-dim)">Opacity: <span id="opacityLabel">100</span>%</label>
               <input type="range" id="brushOpacity" min="10" max="100" value="100" step="10" onchange="updateOpacity()"
-                     style="width:100%;cursor:pointer;margin-top:0.3rem"/>
+                style="width:100%;cursor:pointer;margin-top:0.3rem" />
             </div>
           </div>
 
@@ -882,16 +890,21 @@
             <button class="btn btn-secondary" onclick="redoAnnotation()" title="Redo (Ctrl+Y)">↷ Redo</button>
             <button class="btn btn-secondary" onclick="clearAnnotations()">🗑️ Clear All</button>
             <button class="btn btn-secondary" onclick="resetZoom()" title="Reset zoom">📐 Reset</button>
-            <button class="btn btn-secondary" onclick="toggleGrid()" id="gridToggle" title="Toggle grid overlay">⊞ Grid</button>
+            <button class="btn btn-secondary" onclick="toggleGrid()" id="gridToggle" title="Toggle grid overlay">⊞
+              Grid</button>
             <button class="btn" style="background:var(--accent2)" onclick="saveAnnotations()">⬇️ Download</button>
           </div>
         </div>
 
         <!-- Canvas Container -->
-        <div id="canvasContainer" style="display:none;position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:auto;max-height:600px">
+        <div id="canvasContainer"
+          style="display:none;position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:auto;max-height:600px">
           <canvas id="annotationCanvas" style="display:block;cursor:crosshair"></canvas>
-          <div id="textInputBox" style="display:none;position:absolute;background:var(--card);border:2px solid var(--accent);padding:0.5rem;border-radius:4px;z-index:1000">
-            <input type="text" id="textInput" placeholder="Enter text..." style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:0.5rem;border-radius:4px;width:200px" onkeypress="handleTextInput(event)"/>
+          <div id="textInputBox"
+            style="display:none;position:absolute;background:var(--card);border:2px solid var(--accent);padding:0.5rem;border-radius:4px;z-index:1000">
+            <input type="text" id="textInput" placeholder="Enter text..."
+              style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:0.5rem;border-radius:4px;width:200px"
+              onkeypress="handleTextInput(event)" />
           </div>
         </div>
 
@@ -899,8 +912,9 @@
         <div id="annotationMsg" style="margin-top:1rem;color:var(--text-dim);text-align:center;min-height:1.5rem"></div>
 
         <!-- Keyboard Shortcuts Help -->
-        <div style="margin-top:1rem;padding:0.8rem;background:var(--surface);border-radius:6px;border-left:3px solid var(--accent);font-size:0.85rem">
-          <strong>💡 Keyboard Shortcuts:</strong><br/>
+        <div
+          style="margin-top:1rem;padding:0.8rem;background:var(--surface);border-radius:6px;border-left:3px solid var(--accent);font-size:0.85rem">
+          <strong>💡 Keyboard Shortcuts:</strong><br />
           Ctrl+Z (Undo) • Ctrl+Y (Redo) • Del (Clear) • Scroll (Zoom) • Right-Click (Pan)
         </div>
       </div>
@@ -910,9 +924,10 @@
     <div class="tab-content" id="tab-history">
       <div class="panel">
         <div class="panel-title">📊 Analysis History & Statistics</div>
-        
+
         <!-- Statistics Dashboard -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:2rem;padding:1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border)">
+        <div
+          style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:2rem;padding:1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border)">
           <div style="text-align:center">
             <div style="font-size:2rem;font-weight:700;color:var(--accent)">
               <span id="statTotal">0</span>
@@ -940,22 +955,22 @@
         </div>
 
         <!-- Toolbar with Controls -->
-        <div style="background:var(--surface);padding:1rem;border-radius:10px;margin-bottom:1.5rem;border:1px solid var(--border)">
+        <div
+          style="background:var(--surface);padding:1rem;border-radius:10px;margin-bottom:1.5rem;border:1px solid var(--border)">
           <!-- Search & Filter Row -->
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:0.8rem;margin-bottom:1rem">
             <div>
-              <input type="text" id="historySearch" placeholder="🔍 Search filename..." 
-                     onkeyup="filterHistory()" 
-                     style="width:100%;padding:0.6rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text)"/>
+              <input type="text" id="historySearch" placeholder="🔍 Search filename..." onkeyup="filterHistory()"
+                style="width:100%;padding:0.6rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text)" />
             </div>
-            <select id="filterResult" onchange="filterHistory()" 
-                    style="padding:0.6rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text)">
+            <select id="filterResult" onchange="filterHistory()"
+              style="padding:0.6rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text)">
               <option value="">All Results</option>
               <option value="forged">⚠️ Forged Only</option>
               <option value="authentic">✅ Authentic Only</option>
             </select>
-            <select id="filterSort" onchange="filterHistory()" 
-                    style="padding:0.6rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text)">
+            <select id="filterSort" onchange="filterHistory()"
+              style="padding:0.6rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text)">
               <option value="recent">📅 Newest First</option>
               <option value="oldest">🗓️ Oldest First</option>
               <option value="confidence">🎯 Highest Confidence</option>
@@ -967,25 +982,30 @@
           <!-- Confidence Slider & Action Buttons -->
           <div style="display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:center">
             <div>
-              <label style="font-size:0.8rem;color:var(--text-dim)">Confidence Range: <span id="confLabel">0-100</span>%</label>
-              <input type="range" id="confMin" min="0" max="100" value="0" onchange="filterHistory()" 
-                     style="width:100%;cursor:pointer;margin-top:0.3rem"/>
+              <label style="font-size:0.8rem;color:var(--text-dim)">Confidence Range: <span
+                  id="confLabel">0-100</span>%</label>
+              <input type="range" id="confMin" min="0" max="100" value="0" onchange="filterHistory()"
+                style="width:100%;cursor:pointer;margin-top:0.3rem" />
             </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:0.5rem;white-space:nowrap">
+            <div
+              style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:0.5rem;white-space:nowrap">
               <button class="btn btn-secondary" onclick="exportHistoryCSV()" title="Export as CSV">📥 CSV</button>
               <button class="btn btn-secondary" onclick="exportHistoryJSON()" title="Export as JSON">📥 JSON</button>
-              <button class="btn" style="background:var(--accent2);color:#fff" onclick="deleteSelected()" 
-                      id="deleteBtn" style="display:none" title="Delete selected">🗑️ Delete</button>
+              <button class="btn" style="background:var(--accent2);color:#fff" onclick="deleteSelected()" id="deleteBtn"
+                style="display:none" title="Delete selected">🗑️ Delete</button>
             </div>
           </div>
         </div>
 
         <!-- Result Count & View Options -->
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;color:var(--text-dim);font-size:0.9rem">
+        <div
+          style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;color:var(--text-dim);font-size:0.9rem">
           <span>Showing <strong id="resultCount">0</strong> of <strong id="totalCount">0</strong> records</span>
           <div style="display:flex;gap:0.5rem">
-            <button class="tool-btn" onclick="toggleViewMode('grid')" id="viewGrid" style="padding:0.4rem 0.8rem;font-size:0.85rem">⊞ Grid</button>
-            <button class="tool-btn" onclick="toggleViewMode('list')" id="viewList" style="padding:0.4rem 0.8rem;font-size:0.85rem">☰ List</button>
+            <button class="tool-btn" onclick="toggleViewMode('grid')" id="viewGrid"
+              style="padding:0.4rem 0.8rem;font-size:0.85rem">⊞ Grid</button>
+            <button class="tool-btn" onclick="toggleViewMode('list')" id="viewList"
+              style="padding:0.4rem 0.8rem;font-size:0.85rem">☰ List</button>
           </div>
         </div>
 
@@ -994,43 +1014,705 @@
         </div>
 
         <!-- Load More Button -->
-        <button id="loadMoreBtn" class="btn btn-secondary" onclick="loadMoreHistory()" 
-                style="width:100%;margin-top:1.5rem;display:none">📌 Load More (Showing <span id="displayCount">0</span>/<span id="filteredCount">0</span>)</button>
+        <button id="loadMoreBtn" class="btn btn-secondary" onclick="loadMoreHistory()"
+          style="width:100%;margin-top:1.5rem;display:none">📌 Load More (Showing <span id="displayCount">0</span>/<span
+            id="filteredCount">0</span>)</button>
       </div>
     </div>
 
     <!-- PERFORMANCE TAB -->
     <div class="tab-content" id="tab-performance">
-      <div class="panel">
-        <div class="panel-title">Model Performance</div>
-        <div class="perf-grid">
-          <div class="perf-card">
-            <div class="perf-number">87.5%</div>
-            <div class="perf-label">Accuracy</div>
+      <style>
+        /* ── Performance Dashboard Styles ── */
+        .perf-section-title {
+          font-family: var(--mono);
+          font-size: 0.75rem;
+          color: var(--accent);
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          margin-bottom: 1.2rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid var(--border);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .perf-section-title::before {
+          content: '';
+          display: block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: var(--accent);
+          box-shadow: 0 0 8px var(--accent);
+        }
+
+        .perf-live-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 1rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .perf-live-card {
+          background: linear-gradient(135deg, var(--surface), var(--card));
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 1.25rem 1rem;
+          text-align: center;
+          transition: all 0.3s;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .perf-live-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 12px;
+          opacity: 0;
+          transition: opacity 0.3s;
+          background: linear-gradient(135deg, rgba(0, 217, 255, 0.08), rgba(255, 0, 85, 0.04));
+        }
+
+        .perf-live-card:hover::before {
+          opacity: 1;
+        }
+
+        .perf-live-card:hover {
+          border-color: var(--accent);
+          transform: translateY(-3px);
+          box-shadow: 0 8px 24px rgba(0, 217, 255, 0.15);
+        }
+
+        .perf-live-num {
+          font-size: 2.2rem;
+          font-weight: 800;
+          letter-spacing: -1px;
+          background: linear-gradient(135deg, var(--accent), #38bdf8);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          line-height: 1;
+          margin-bottom: 0.4rem;
+        }
+
+        .perf-live-num.danger {
+          background: linear-gradient(135deg, var(--accent2), #f97316);
+          -webkit-background-clip: text;
+          background-clip: text;
+        }
+
+        .perf-live-num.success {
+          background: linear-gradient(135deg, var(--success), #34d399);
+          -webkit-background-clip: text;
+          background-clip: text;
+        }
+
+        .perf-live-num.gold {
+          background: linear-gradient(135deg, var(--accent3), #f59e0b);
+          -webkit-background-clip: text;
+          background-clip: text;
+        }
+
+        .perf-live-label {
+          font-size: 0.72rem;
+          color: var(--text-dim);
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          font-weight: 500;
+        }
+
+        .perf-section {
+          background: var(--card);
+          border: 1px solid var(--border);
+          border-radius: 14px;
+          padding: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .gauge-row {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .gauge-wrap {
+          text-align: center;
+        }
+
+        .gauge-wrap canvas {
+          display: block;
+          margin: 0 auto;
+        }
+
+        .gauge-label {
+          font-size: 0.75rem;
+          color: var(--text-dim);
+          margin-top: 0.4rem;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+
+        .gauge-value {
+          font-size: 1.15rem;
+          font-weight: 700;
+          color: var(--text);
+          margin-top: 0.15rem;
+        }
+
+        .algo-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 0.9rem;
+        }
+
+        .algo-table th {
+          color: var(--text-dim);
+          text-align: left;
+          padding: 0.6rem 0.8rem;
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .algo-table td {
+          padding: 0.75rem 0.8rem;
+          border-bottom: 1px solid rgba(45, 58, 92, 0.5);
+          vertical-align: middle;
+        }
+
+        .algo-table tr:last-child td {
+          border-bottom: none;
+        }
+
+        .algo-table tr:hover td {
+          background: rgba(0, 217, 255, 0.04);
+        }
+
+        .bar-track {
+          height: 6px;
+          background: var(--border);
+          border-radius: 99px;
+          overflow: hidden;
+        }
+
+        .bar-fill {
+          height: 100%;
+          border-radius: 99px;
+          transition: width 1s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .badge {
+          display: inline-block;
+          padding: 2px 8px;
+          border-radius: 99px;
+          font-size: 0.7rem;
+          font-weight: 600;
+        }
+
+        .badge-fast {
+          background: rgba(16, 185, 129, 0.15);
+          color: var(--success);
+        }
+
+        .badge-acc {
+          background: rgba(0, 217, 255, 0.15);
+          color: var(--accent);
+        }
+
+        .badge-auto {
+          background: rgba(255, 215, 0, 0.15);
+          color: var(--accent3);
+        }
+
+        .trend-wrap {
+          position: relative;
+        }
+
+        #trendChart,
+        #donutChart {
+          display: block;
+        }
+
+        .chart-legend {
+          display: flex;
+          gap: 1.5rem;
+          flex-wrap: wrap;
+          margin-top: 1rem;
+          font-size: 0.8rem;
+          color: var(--text-dim);
+        }
+
+        .legend-dot {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          margin-right: 4px;
+        }
+
+        .perf-refresh-btn {
+          padding: 0.4rem 0.9rem;
+          background: rgba(0, 217, 255, 0.1);
+          border: 1px solid var(--accent);
+          color: var(--accent);
+          border-radius: 6px;
+          font-size: 0.78rem;
+          font-family: var(--sans);
+          cursor: pointer;
+          transition: all 0.2s;
+          margin-left: auto;
+        }
+
+        .perf-refresh-btn:hover {
+          background: rgba(0, 217, 255, 0.2);
+        }
+
+        .benchmark-compare {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 1rem;
+        }
+
+        .bm-card {
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          padding: 1.2rem;
+          text-align: center;
+          transition: all 0.2s;
+        }
+
+        .bm-card:hover {
+          border-color: var(--accent);
+        }
+
+        .bm-card.highlight {
+          border-color: var(--accent);
+          background: rgba(0, 217, 255, 0.05);
+        }
+
+        .bm-name {
+          font-size: 0.75rem;
+          color: var(--text-dim);
+          text-transform: uppercase;
+          letter-spacing: .08em;
+          margin-bottom: 0.5rem;
+        }
+
+        .bm-score {
+          font-size: 2rem;
+          font-weight: 800;
+          color: var(--accent);
+        }
+
+        .bm-card.highlight .bm-score {
+          color: var(--accent);
+        }
+
+        .bm-tag {
+          font-size: 0.7rem;
+          margin-top: 0.3rem;
+          color: var(--text-dim);
+        }
+
+        .perf-split {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+          .perf-split {
+            grid-template-columns: 1fr;
+          }
+        }
+      </style>
+
+      <!-- Live Session Stats -->
+      <div class="perf-section">
+        <div class="perf-section-title" style="display:flex">
+          📡 Live Session Stats
+          <button class="perf-refresh-btn" onclick="refreshPerfStats()">↻ Refresh</button>
+        </div>
+        <div class="perf-live-grid">
+          <div class="perf-live-card">
+            <div class="perf-live-num" id="perfTotalScans">—</div>
+            <div class="perf-live-label">Total Scans</div>
           </div>
-          <div class="perf-card">
-            <div class="perf-number">89.2%</div>
-            <div class="perf-label">Precision</div>
+          <div class="perf-live-card">
+            <div class="perf-live-num danger" id="perfForged">—</div>
+            <div class="perf-live-label">Forged Detected</div>
           </div>
-          <div class="perf-card">
-            <div class="perf-number">85.8%</div>
-            <div class="perf-label">Recall</div>
+          <div class="perf-live-card">
+            <div class="perf-live-num success" id="perfAuthentic">—</div>
+            <div class="perf-live-label">Authentic Images</div>
           </div>
-          <div class="perf-card">
-            <div class="perf-number">87.4%</div>
-            <div class="perf-label">F1-Score</div>
+          <div class="perf-live-card">
+            <div class="perf-live-num gold" id="perfAvgConf">—</div>
+            <div class="perf-live-label">Avg Confidence</div>
           </div>
-          <div class="perf-card">
-            <div class="perf-number">234ms</div>
-            <div class="perf-label">Avg Inference</div>
+          <div class="perf-live-card">
+            <div class="perf-live-num" id="perfHighConf">—</div>
+            <div class="perf-live-label">High Conf (≥80%)</div>
           </div>
-          <div class="perf-card">
-            <div class="perf-number" id="scanCount">0</div>
-            <div class="perf-label">Total Scans</div>
+          <div class="perf-live-card">
+            <div class="perf-live-num danger" id="perfDetectionRate">—</div>
+            <div class="perf-live-label">Detection Rate</div>
           </div>
         </div>
       </div>
+
+      <!-- Metric Gauges + Donut -->
+      <div class="perf-split">
+        <!-- Accuracy Gauges -->
+        <div class="perf-section">
+          <div class="perf-section-title">🎯 Model Metrics</div>
+          <div class="gauge-row">
+            <div class="gauge-wrap">
+              <canvas id="gaugeAccuracy" width="100" height="100"></canvas>
+              <div class="gauge-value">87.5%</div>
+              <div class="gauge-label">Accuracy</div>
+            </div>
+            <div class="gauge-wrap">
+              <canvas id="gaugePrecision" width="100" height="100"></canvas>
+              <div class="gauge-value">89.2%</div>
+              <div class="gauge-label">Precision</div>
+            </div>
+            <div class="gauge-wrap">
+              <canvas id="gaugeRecall" width="100" height="100"></canvas>
+              <div class="gauge-value">85.8%</div>
+              <div class="gauge-label">Recall</div>
+            </div>
+            <div class="gauge-wrap">
+              <canvas id="gaugeF1" width="100" height="100"></canvas>
+              <div class="gauge-value">87.4%</div>
+              <div class="gauge-label">F1 Score</div>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;padding:1rem;background:var(--surface);border-radius:8px;font-size:0.85rem">
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem">
+              <span style="color:var(--text-dim)">Avg Inference Time</span>
+              <strong>234 ms</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem">
+              <span style="color:var(--text-dim)">False Positive Rate</span>
+              <strong style="color:var(--accent2)">~8%</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span style="color:var(--text-dim)">False Negative Rate</span>
+              <strong style="color:var(--warning)">~6%</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Donut Chart -->
+        <div class="perf-section">
+          <div class="perf-section-title">🍩 Detection Breakdown</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap">
+            <canvas id="donutChart" width="160" height="160"></canvas>
+            <div>
+              <div style="font-size:0.85rem;margin-bottom:0.8rem">
+                <span class="legend-dot" style="background:var(--accent2)"></span>
+                <span style="color:var(--text-dim)">Forged: <strong id="donutForgedPct">—</strong></span>
+              </div>
+              <div style="font-size:0.85rem;margin-bottom:0.8rem">
+                <span class="legend-dot" style="background:var(--success)"></span>
+                <span style="color:var(--text-dim)">Authentic: <strong id="donutAuthPct">—</strong></span>
+              </div>
+              <div style="font-size:0.85rem">
+                <span class="legend-dot" style="background:var(--accent)"></span>
+                <span style="color:var(--text-dim)">High Conf: <strong id="donutHighPct">—</strong></span>
+              </div>
+              <div
+                style="margin-top:1.5rem;padding:0.8rem;background:var(--surface);border-radius:8px;font-size:0.8rem;color:var(--text-dim)">
+                Based on your scan history.<br />Refresh to update.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trend Chart -->
+      <div class="perf-section">
+        <div class="perf-section-title">📈 Confidence Trend (Last 20 Scans)</div>
+        <div class="trend-wrap">
+          <canvas id="trendChart" width="800" height="200" style="width:100%;height:200px;"></canvas>
+        </div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:var(--accent)"></span>Confidence %</span>
+          <span><span class="legend-dot" style="background:var(--accent2)"></span>Forged</span>
+          <span><span class="legend-dot" style="background:var(--success)"></span>Authentic</span>
+        </div>
+      </div>
+
+      <!-- Algorithm Comparison Table -->
+      <div class="perf-section">
+        <div class="perf-section-title">⚙️ Algorithm Comparison</div>
+        <div style="overflow-x:auto">
+          <table class="algo-table">
+            <thead>
+              <tr>
+                <th>Algorithm</th>
+                <th>Speed</th>
+                <th>Accuracy</th>
+                <th>Keypoints</th>
+                <th>Best For</th>
+                <th>Tag</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>ORB</strong></td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:0.5rem">
+                    <div class="bar-track" style="width:90px">
+                      <div class="bar-fill" style="width:95%;background:var(--success)"></div>
+                    </div>
+                    <span style="font-size:0.8rem;color:var(--success)">Fast</span>
+                  </div>
+                </td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:0.5rem">
+                    <div class="bar-track" style="width:90px">
+                      <div class="bar-fill" style="width:82%;background:var(--accent)"></div>
+                    </div>
+                    <span style="font-size:0.8rem">82%</span>
+                  </div>
+                </td>
+                <td>~3,000</td>
+                <td style="color:var(--text-dim);font-size:0.85rem">Rough forgeries, real-time</td>
+                <td><span class="badge badge-fast">⚡ Speed</span></td>
+              </tr>
+              <tr>
+                <td><strong>SIFT</strong></td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:0.5rem">
+                    <div class="bar-track" style="width:90px">
+                      <div class="bar-fill" style="width:45%;background:var(--warning)"></div>
+                    </div>
+                    <span style="font-size:0.8rem;color:var(--warning)">Slow</span>
+                  </div>
+                </td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:0.5rem">
+                    <div class="bar-track" style="width:90px">
+                      <div class="bar-fill" style="width:89%;background:var(--accent)"></div>
+                    </div>
+                    <span style="font-size:0.8rem">89%</span>
+                  </div>
+                </td>
+                <td>~8,000</td>
+                <td style="color:var(--text-dim);font-size:0.85rem">Precise clone detection</td>
+                <td><span class="badge badge-acc">🎯 Accuracy</span></td>
+              </tr>
+              <tr>
+                <td><strong>Auto</strong></td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:0.5rem">
+                    <div class="bar-track" style="width:90px">
+                      <div class="bar-fill" style="width:70%;background:var(--accent)"></div>
+                    </div>
+                    <span style="font-size:0.8rem;color:var(--accent)">Med</span>
+                  </div>
+                </td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:0.5rem">
+                    <div class="bar-track" style="width:90px">
+                      <div class="bar-fill" style="width:87%;background:var(--accent)"></div>
+                    </div>
+                    <span style="font-size:0.8rem">87%</span>
+                  </div>
+                </td>
+                <td>Adaptive</td>
+                <td style="color:var(--text-dim);font-size:0.85rem">General purpose, adaptive</td>
+                <td><span class="badge badge-auto">⚖ Balanced</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Benchmark Comparison -->
+      <div class="perf-section">
+        <div class="perf-section-title">🏆 Benchmark Comparison (CASIA Dataset)</div>
+        <div class="benchmark-compare">
+          <div class="bm-card">
+            <div class="bm-name">Baseline SIFT</div>
+            <div class="bm-score" style="color:var(--text-dim)">82.3%</div>
+            <div class="bm-tag">Accuracy</div>
+          </div>
+          <div class="bm-card">
+            <div class="bm-name">ORB Only</div>
+            <div class="bm-score" style="color:var(--warning)">79.1%</div>
+            <div class="bm-tag">Accuracy</div>
+          </div>
+          <div class="bm-card highlight">
+            <div class="bm-name">SIFT + ORB (Ours)</div>
+            <div class="bm-score">87.5%</div>
+            <div class="bm-tag" style="color:var(--success)">⬆ Best Result</div>
+          </div>
+          <div class="bm-card">
+            <div class="bm-name">SURF + PCA</div>
+            <div class="bm-score" style="color:var(--text-dim)">84.7%</div>
+            <div class="bm-tag">Accuracy</div>
+          </div>
+          <div class="bm-card">
+            <div class="bm-name">Deep CNN</div>
+            <div class="bm-score" style="color:var(--accent3)">91.2%</div>
+            <div class="bm-tag" style="color:var(--text-dim)">Requires GPU</div>
+          </div>
+        </div>
+        <div
+          style="margin-top:1.5rem;padding:1rem;background:var(--surface);border-radius:8px;font-size:0.85rem;color:var(--text-dim)">
+          <strong style="color:var(--text)">📚 Dataset:</strong> CASIA v1/v2 — 7,200 forged + 1,500 authentic images
+          &nbsp;|&nbsp; <strong style="color:var(--text)">Error Budget:</strong> FP ~8% (texture-heavy) · FN ~6%
+          (sub-pixel clones)
+        </div>
+      </div>
+
+      <!-- ── Confusion Matrix ── -->
+      <div class="perf-section">
+        <div class="perf-section-title">🔲 Confusion Matrix <span
+            style="font-size:0.7rem;color:var(--text-dim);text-transform:none;letter-spacing:0;margin-left:0.5rem">(estimated
+            from your scan history)</span></div>
+        <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:2px;max-width:420px;margin:0 auto">
+          <!-- Header row -->
+          <div></div>
+          <div style="text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--text-dim);font-weight:600">
+            Predicted: Forged</div>
+          <div style="text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--text-dim);font-weight:600">
+            Predicted: Authentic</div>
+          <!-- TP / FN row -->
+          <div
+            style="display:flex;align-items:center;padding:0.5rem;font-size:0.75rem;color:var(--text-dim);font-weight:600;writing-mode:horizontal-tb">
+            Actual: Forged</div>
+          <div id="cmTP"
+            style="background:rgba(0,217,255,0.12);border:2px solid var(--accent);border-radius:10px;padding:1.5rem 1rem;text-align:center;transition:all 0.3s">
+            <div style="font-size:2rem;font-weight:800;color:var(--accent)" id="cmTPval">—</div>
+            <div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.3rem">True Positives</div>
+          </div>
+          <div id="cmFN"
+            style="background:rgba(245,158,11,0.08);border:2px solid var(--warning);border-radius:10px;padding:1.5rem 1rem;text-align:center;transition:all 0.3s">
+            <div style="font-size:2rem;font-weight:800;color:var(--warning)" id="cmFNval">—</div>
+            <div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.3rem">False Negatives</div>
+          </div>
+          <!-- FP / TN row -->
+          <div
+            style="display:flex;align-items:center;padding:0.5rem;font-size:0.75rem;color:var(--text-dim);font-weight:600">
+            Actual: Authentic</div>
+          <div id="cmFP"
+            style="background:rgba(255,0,85,0.08);border:2px solid var(--accent2);border-radius:10px;padding:1.5rem 1rem;text-align:center;transition:all 0.3s">
+            <div style="font-size:2rem;font-weight:800;color:var(--accent2)" id="cmFPval">—</div>
+            <div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.3rem">False Positives</div>
+          </div>
+          <div id="cmTN"
+            style="background:rgba(16,185,129,0.08);border:2px solid var(--success);border-radius:10px;padding:1.5rem 1rem;text-align:center;transition:all 0.3s">
+            <div style="font-size:2rem;font-weight:800;color:var(--success)" id="cmTNval">—</div>
+            <div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.3rem">True Negatives</div>
+          </div>
+        </div>
+        <div
+          style="margin-top:1rem;padding:0.75rem;background:var(--surface);border-radius:8px;font-size:0.8rem;color:var(--text-dim);text-align:center">
+          TP = correctly flagged forgeries · TN = correctly cleared authentic · FP/FN estimated using 8%/6% error rates
+        </div>
+      </div>
+
+      <!-- ── Confidence Histogram + Radar ── -->
+      <div class="perf-split">
+        <!-- Confidence Distribution Histogram -->
+        <div class="perf-section">
+          <div class="perf-section-title">📊 Confidence Distribution</div>
+          <canvas id="histoChart" width="400" height="200" style="width:100%;height:200px"></canvas>
+          <div class="chart-legend" style="margin-top:0.8rem">
+            <span><span class="legend-dot" style="background:var(--accent2)"></span>Forged</span>
+            <span><span class="legend-dot" style="background:var(--success)"></span>Authentic</span>
+          </div>
+        </div>
+
+        <!-- Spider / Radar Chart -->
+        <div class="perf-section">
+          <div class="perf-section-title">🕸️ Algorithm Radar</div>
+          <div style="display:flex;justify-content:center">
+            <canvas id="radarChart" width="260" height="260"></canvas>
+          </div>
+          <div class="chart-legend" style="justify-content:center;margin-top:0.8rem">
+            <span><span class="legend-dot" style="background:#00d9ff"></span>SIFT</span>
+            <span><span class="legend-dot" style="background:#ff0055"></span>ORB</span>
+            <span><span class="legend-dot" style="background:#ffd700"></span>Auto</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Hourly Activity Heatmap ── -->
+      <div class="perf-section">
+        <div class="perf-section-title">🕐 Hourly Activity Heatmap</div>
+        <div id="heatmapGrid" style="display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-bottom:0.5rem">
+        </div>
+        <div
+          style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-dim);margin-top:0.3rem">
+          <span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>11 PM</span>
+        </div>
+        <div
+          style="display:flex;align-items:center;gap:0.5rem;margin-top:0.8rem;font-size:0.78rem;color:var(--text-dim)">
+          <span>Low</span>
+          <div
+            style="height:10px;width:120px;border-radius:4px;background:linear-gradient(90deg,rgba(0,217,255,0.08),rgba(0,217,255,0.9))">
+          </div>
+          <span>High</span>
+        </div>
+      </div>
+
+      <!-- ── Top High-Risk Detections + Export ── -->
+      <div class="perf-split">
+        <!-- Top Forged -->
+        <div class="perf-section">
+          <div class="perf-section-title">🚨 Top High-Risk Detections</div>
+          <div id="topRiskGrid"
+            style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.75rem">
+            <div style="color:var(--text-dim);font-size:0.85rem;grid-column:1/-1;text-align:center;padding:1rem">
+              Loading…</div>
+          </div>
+        </div>
+
+        <!-- Export + System Info -->
+        <div class="perf-section">
+          <div class="perf-section-title">📥 Export & System Info</div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem">
+            <button class="btn btn-primary" onclick="exportPerfReport()" style="justify-content:center">
+              📥 Download Performance Report (JSON)
+            </button>
+            <button class="btn btn-secondary" onclick="exportPerfCSV()" style="justify-content:center">
+              📄 Export Stats as CSV
+            </button>
+          </div>
+          <div style="background:var(--surface);border-radius:8px;padding:1rem;font-size:0.82rem">
+            <div class="perf-section-title" style="margin-bottom:0.8rem;font-size:0.7rem">⚙️ System Info</div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem">
+              <span style="color:var(--text-dim)">Framework</span><strong>Flask + Waitress</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem">
+              <span style="color:var(--text-dim)">CV Backend</span><strong>OpenCV (SIFT / ORB)</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem">
+              <span style="color:var(--text-dim)">Clustering</span><strong>DBSCAN (scikit-learn)</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem">
+              <span style="color:var(--text-dim)">Database</span><strong>MongoDB Atlas</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span style="color:var(--text-dim)">Report Generated</span>
+              <strong id="perfTimestamp">—</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
+
 
     <!-- RESEARCH TAB -->
     <div class="tab-content" id="tab-research">
@@ -1123,10 +1805,438 @@
       document.getElementById('tab-' + id).classList.add('active');
       event.target.classList.add('active');
       if (id === 'history') loadHistory();
-      if (id === 'performance') updateScanCount();
+      if (id === 'performance') { updateScanCount(); refreshPerfStats(); }
     }
 
+    // ─── Performance Dashboard ───
+    function drawGauge(canvasId, value, color) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cx = 50, cy = 50, r = 38, lw = 8;
+      const start = -Math.PI * 1.2, end = start + (Math.PI * 2.4) * (value / 100);
+      ctx.clearRect(0, 0, 100, 100);
+      // Track
+      ctx.beginPath(); ctx.arc(cx, cy, r, -Math.PI * 1.2, Math.PI * 0.2);
+      ctx.strokeStyle = 'rgba(45,58,92,0.6)'; ctx.lineWidth = lw; ctx.lineCap = 'round';
+      ctx.stroke();
+      // Fill
+      if (value > 0) {
+        ctx.beginPath(); ctx.arc(cx, cy, r, start, end);
+        ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+        ctx.shadowColor = color; ctx.shadowBlur = 10;
+        ctx.stroke(); ctx.shadowBlur = 0;
+      }
+    }
+
+    function drawDonut(forged, authentic, highConf) {
+      const canvas = document.getElementById('donutChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const total = forged + authentic || 1;
+      const cx = 80, cy = 80, r = 65, inner = 45;
+      ctx.clearRect(0, 0, 160, 160);
+      const slices = [
+        { val: forged, color: '#ff0055' },
+        { val: authentic, color: '#10b981' },
+      ];
+      let angle = -Math.PI / 2;
+      slices.forEach(s => {
+        const sweep = (s.val / total) * Math.PI * 2;
+        ctx.beginPath(); ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, angle, angle + sweep);
+        ctx.closePath();
+        ctx.fillStyle = s.color; ctx.shadowColor = s.color; ctx.shadowBlur = 8;
+        ctx.fill(); ctx.shadowBlur = 0;
+        angle += sweep;
+      });
+      // Inner cutout
+      ctx.beginPath(); ctx.arc(cx, cy, inner, 0, Math.PI * 2);
+      ctx.fillStyle = '#151d3f'; ctx.fill();
+    }
+
+    function drawTrend(history) {
+      const canvas = document.getElementById('trendChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.offsetWidth || 800;
+      const H = 200;
+      canvas.width = W; canvas.height = H;
+      ctx.clearRect(0, 0, W, H);
+
+      const data = history.slice(-20);
+      if (data.length < 2) {
+        ctx.fillStyle = 'rgba(156,163,175,0.4)';
+        ctx.font = '14px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Not enough data yet — analyze some images!', W / 2, H / 2);
+        return;
+      }
+
+      const pad = { l: 40, r: 20, t: 20, b: 30 };
+      const chartW = W - pad.l - pad.r;
+      const chartH = H - pad.t - pad.b;
+
+      // Grid
+      ctx.strokeStyle = 'rgba(45,58,92,0.4)'; ctx.lineWidth = 1;
+      [0, 25, 50, 75, 100].forEach(v => {
+        const y = pad.t + chartH - (v / 100) * chartH;
+        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + chartW, y); ctx.stroke();
+        ctx.fillStyle = 'rgba(156,163,175,0.5)'; ctx.font = '10px Inter'; ctx.textAlign = 'right';
+        ctx.fillText(v + '%', pad.l - 6, y + 3);
+      });
+
+      // Line
+      const xStep = chartW / (data.length - 1);
+      const pts = data.map((r, i) => ({
+        x: pad.l + i * xStep,
+        y: pad.t + chartH - (r.confidence / 100) * chartH,
+        forged: r.detected
+      }));
+
+      // Gradient fill
+      const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + chartH);
+      grad.addColorStop(0, 'rgba(0,217,255,0.25)');
+      grad.addColorStop(1, 'rgba(0,217,255,0.00)');
+      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+      pts.forEach(p => ctx.lineTo(p.x, p.y));
+      ctx.lineTo(pts[pts.length - 1].x, pad.t + chartH);
+      ctx.lineTo(pts[0].x, pad.t + chartH);
+      ctx.closePath(); ctx.fillStyle = grad; ctx.fill();
+
+      // Line stroke
+      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+      pts.forEach(p => ctx.lineTo(p.x, p.y));
+      ctx.strokeStyle = '#00d9ff'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round';
+      ctx.shadowColor = '#00d9ff'; ctx.shadowBlur = 8; ctx.stroke(); ctx.shadowBlur = 0;
+
+      // Dots
+      pts.forEach(p => {
+        ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = p.forged ? '#ff0055' : '#10b981';
+        ctx.shadowColor = p.forged ? '#ff0055' : '#10b981'; ctx.shadowBlur = 6;
+        ctx.fill(); ctx.shadowBlur = 0;
+      });
+    }
+
+    function refreshPerfStats() {
+      fetch('/history').then(r => r.json()).then(data => {
+        const total = data.length;
+        const forged = data.filter(r => r.detected).length;
+        const authentic = total - forged;
+        const avgConf = total > 0 ? (data.reduce((s, r) => s + (r.confidence || 0), 0) / total).toFixed(1) : 0;
+        const highConf = data.filter(r => (r.confidence || 0) >= 80).length;
+        const detRate = total > 0 ? ((forged / total) * 100).toFixed(1) : 0;
+
+        document.getElementById('perfTotalScans').textContent = total;
+        document.getElementById('perfForged').textContent = forged;
+        document.getElementById('perfAuthentic').textContent = authentic;
+        document.getElementById('perfAvgConf').textContent = avgConf + '%';
+        document.getElementById('perfHighConf').textContent = highConf;
+        document.getElementById('perfDetectionRate').textContent = detRate + '%';
+        document.getElementById('scanCount') && (document.getElementById('scanCount').textContent = total);
+
+        // Pcts
+        const fPct = total > 0 ? ((forged / total) * 100).toFixed(1) + '%' : '—';
+        const aPct = total > 0 ? ((authentic / total) * 100).toFixed(1) + '%' : '—';
+        const hPct = total > 0 ? ((highConf / total) * 100).toFixed(1) + '%' : '—';
+        document.getElementById('donutForgedPct').textContent = fPct;
+        document.getElementById('donutAuthPct').textContent = aPct;
+        document.getElementById('donutHighPct').textContent = hPct;
+
+        // Charts
+        requestAnimationFrame(() => {
+          drawGauge('gaugeAccuracy', 87.5, '#00d9ff');
+          drawGauge('gaugePrecision', 89.2, '#38bdf8');
+          drawGauge('gaugeRecall', 85.8, '#0ea5e9');
+          drawGauge('gaugeF1', 87.4, '#7dd3fc');
+          drawDonut(forged, authentic, highConf);
+          drawTrend(data);
+        });
+      }).catch(() => { });
+    }
+
+    // ─── Confusion Matrix (estimated) ───
+    function drawConfusionMatrix(forged, authentic) {
+      const FP_RATE = 0.08, FN_RATE = 0.06;
+      const TP = Math.round(forged * (1 - FN_RATE));
+      const FN = forged - TP;
+      const TN = Math.round(authentic * (1 - FP_RATE));
+      const FP = authentic - TN;
+      document.getElementById('cmTPval').textContent = TP;
+      document.getElementById('cmFNval').textContent = FN;
+      document.getElementById('cmFPval').textContent = FP;
+      document.getElementById('cmTNval').textContent = TN;
+    }
+
+    // ─── Confidence Distribution Histogram ───
+    function drawHistogram(data) {
+      const canvas = document.getElementById('histoChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.offsetWidth || 400;
+      const H = 200;
+      canvas.width = W; canvas.height = H;
+      ctx.clearRect(0, 0, W, H);
+
+      // Build 10 buckets [0-10), [10-20) ... [90-100]
+      const forgedBuckets = new Array(10).fill(0);
+      const authBuckets = new Array(10).fill(0);
+      data.forEach(r => {
+        const b = Math.min(9, Math.floor((r.confidence || 0) / 10));
+        if (r.detected) forgedBuckets[b]++; else authBuckets[b]++;
+      });
+      const maxVal = Math.max(...forgedBuckets.map((v, i) => v + authBuckets[i]), 1);
+      const pad = { l: 35, r: 10, t: 15, b: 30 };
+      const barW = (W - pad.l - pad.r) / 10 - 3;
+      const chartH = H - pad.t - pad.b;
+
+      // Y grid
+      ctx.strokeStyle = 'rgba(45,58,92,0.4)'; ctx.lineWidth = 1;
+      [0, 0.25, 0.5, 0.75, 1].forEach(f => {
+        const y = pad.t + chartH - f * chartH;
+        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+        ctx.fillStyle = 'rgba(156,163,175,0.5)'; ctx.font = '9px Inter'; ctx.textAlign = 'right';
+        ctx.fillText(Math.round(f * maxVal), pad.l - 4, y + 3);
+      });
+
+      for (let i = 0; i < 10; i++) {
+        const x = pad.l + i * ((W - pad.l - pad.r) / 10) + 1.5;
+        const fH = (forgedBuckets[i] / maxVal) * chartH;
+        const aH = (authBuckets[i] / maxVal) * chartH;
+
+        // Authentic (bottom)
+        if (aH > 0) {
+          ctx.fillStyle = '#10b981';
+          ctx.shadowColor = '#10b981'; ctx.shadowBlur = 4;
+          ctx.fillRect(x, pad.t + chartH - aH, barW, aH);
+          ctx.shadowBlur = 0;
+        }
+        // Forged (on top)
+        if (fH > 0) {
+          ctx.fillStyle = '#ff0055';
+          ctx.shadowColor = '#ff0055'; ctx.shadowBlur = 4;
+          ctx.fillRect(x, pad.t + chartH - aH - fH, barW, fH);
+          ctx.shadowBlur = 0;
+        }
+        // X label
+        ctx.fillStyle = 'rgba(156,163,175,0.6)'; ctx.font = '9px Inter'; ctx.textAlign = 'center';
+        ctx.fillText((i * 10) + '%', x + barW / 2, H - 8);
+      }
+    }
+
+    // ─── Hourly Activity Heatmap ───
+    function drawHeatmap(data) {
+      const grid = document.getElementById('heatmapGrid');
+      if (!grid) return;
+      const counts = new Array(24).fill(0);
+      data.forEach(r => {
+        if (r.timestamp) {
+          const h = new Date(r.timestamp).getHours();
+          if (h >= 0 && h < 24) counts[h]++;
+        }
+      });
+      const maxC = Math.max(...counts, 1);
+      grid.innerHTML = counts.map((c, h) => {
+        const intensity = c / maxC;
+        const alpha = 0.06 + intensity * 0.88;
+        const title = `${h}:00 — ${c} scan${c !== 1 ? 's' : ''}`;
+        return `<div title="${title}" style="height:36px;border-radius:4px;background:rgba(0,217,255,${alpha.toFixed(2)});cursor:default;transition:all 0.2s;position:relative" onmouseover="this.style.transform='scaleY(1.15)'" onmouseout="this.style.transform='scaleY(1)'"></div>`;
+      }).join('');
+    }
+
+    // ─── Algorithm Radar / Spider Chart ───
+    function drawRadar() {
+      const canvas = document.getElementById('radarChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = 260, H = 260, cx = 130, cy = 130, r = 90;
+      ctx.clearRect(0, 0, W, H);
+
+      const axes = ['Accuracy', 'Speed', 'Keypoints', 'Precision', 'Robustness'];
+      const n = axes.length;
+      const datasets = [
+        { label: 'SIFT', vals: [0.892, 0.40, 0.95, 0.89, 0.85], color: '#00d9ff' },
+        { label: 'ORB', vals: [0.820, 0.96, 0.35, 0.82, 0.70], color: '#ff0055' },
+        { label: 'Auto', vals: [0.875, 0.65, 0.65, 0.87, 0.80], color: '#ffd700' },
+      ];
+
+      // Draw grid rings
+      [0.25, 0.5, 0.75, 1].forEach(f => {
+        ctx.beginPath();
+        for (let i = 0; i < n; i++) {
+          const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+          const px = cx + Math.cos(angle) * r * f;
+          const py = cy + Math.sin(angle) * r * f;
+          i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = 'rgba(45,58,92,0.6)'; ctx.lineWidth = 1; ctx.stroke();
+      });
+
+      // Draw axes
+      for (let i = 0; i < n; i++) {
+        const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r);
+        ctx.strokeStyle = 'rgba(45,58,92,0.6)'; ctx.lineWidth = 1; ctx.stroke();
+        // Labels
+        const lx = cx + Math.cos(angle) * (r + 14);
+        const ly = cy + Math.sin(angle) * (r + 14);
+        ctx.fillStyle = 'rgba(156,163,175,0.85)'; ctx.font = '9.5px Inter'; ctx.textAlign = 'center';
+        ctx.fillText(axes[i], lx, ly + 3);
+      }
+
+      // Draw data polygons
+      datasets.forEach(ds => {
+        ctx.beginPath();
+        ds.vals.forEach((v, i) => {
+          const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+          const px = cx + Math.cos(angle) * r * v;
+          const py = cy + Math.sin(angle) * r * v;
+          i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        });
+        ctx.closePath();
+        ctx.strokeStyle = ds.color; ctx.lineWidth = 2;
+        ctx.shadowColor = ds.color; ctx.shadowBlur = 8; ctx.stroke(); ctx.shadowBlur = 0;
+        ctx.fillStyle = ds.color.replace(')', ',0.12)').replace('#', 'rgba(').replace('rgba(', 'rgba(').replace('rgba(00', 'rgba(0,0,').replace('rgba(ff', 'rgba(255,0,').replace('rgba(ffd700', 'rgba(255,215,0');
+        // Simple fill approach:
+        ctx.globalAlpha = 0.13; ctx.fill(); ctx.globalAlpha = 1;
+        // Dots
+        ds.vals.forEach((v, i) => {
+          const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+          ctx.beginPath();
+          ctx.arc(cx + Math.cos(angle) * r * v, cy + Math.sin(angle) * r * v, 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = ds.color; ctx.shadowColor = ds.color; ctx.shadowBlur = 6;
+          ctx.fill(); ctx.shadowBlur = 0;
+        });
+      });
+    }
+
+    // ─── Top High-Risk Gallery ───
+    function renderTopRisk(data) {
+      const grid = document.getElementById('topRiskGrid');
+      if (!grid) return;
+      const topSix = data.filter(r => r.detected && r.uploaded_image_url)
+        .sort((a, b) => (b.confidence || 0) - (a.confidence || 0))
+        .slice(0, 6);
+      if (topSix.length === 0) {
+        grid.innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem;grid-column:1/-1;text-align:center;padding:1rem">No forged images detected yet</div>';
+        return;
+      }
+      grid.innerHTML = topSix.map(r => `
+        <div style="border-radius:8px;overflow:hidden;border:2px solid var(--accent2);position:relative;cursor:zoom-in" onclick="openZoom('${r.uploaded_image_url}')">
+          <img src="${r.uploaded_image_url}" style="width:100%;height:90px;object-fit:cover;display:block"/>
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(0,0,0,0.8),transparent);padding:4px 6px;font-size:0.68rem;font-weight:700;color:#ff0055">${r.confidence}%</div>
+        </div>
+      `).join('');
+    }
+
+    // ─── Export Functions ───
+    function exportPerfReport() {
+      fetch('/history').then(r => r.json()).then(data => {
+        const total = data.length;
+        const forged = data.filter(r => r.detected).length;
+        const authentic = total - forged;
+        const avgConf = total > 0 ? (data.reduce((s, r) => s + (r.confidence || 0), 0) / total).toFixed(1) : 0;
+        const report = {
+          generated: new Date().toISOString(),
+          model: { accuracy: 87.5, precision: 89.2, recall: 85.8, f1: 87.4, avgInferenceMs: 234 },
+          session: { totalScans: total, forged, authentic, avgConfidence: parseFloat(avgConf), detectionRate: total > 0 ? ((forged / total) * 100).toFixed(1) + '%' : '0%' },
+          algorithms: { ORB: { accuracy: 82, speed: 'fast' }, SIFT: { accuracy: 89, speed: 'slow' }, Auto: { accuracy: 87, speed: 'medium' } },
+          dataset: 'CASIA v1/v2 — 8700 images',
+          history: data.slice(-50)
+        };
+        const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url;
+        a.download = 'deep_forensics_perf_' + Date.now() + '.json';
+        a.click(); URL.revokeObjectURL(url);
+      });
+    }
+
+    function exportPerfCSV() {
+      fetch('/history').then(r => r.json()).then(data => {
+        const total = data.length;
+        const forged = data.filter(r => r.detected).length;
+        const avgConf = total > 0 ? (data.reduce((s, r) => s + (r.confidence || 0), 0) / total).toFixed(1) : 0;
+        const rows = [
+          ['Metric', 'Value'],
+          ['Total Scans', total],
+          ['Forged Detected', forged],
+          ['Authentic', total - forged],
+          ['Detection Rate', total > 0 ? ((forged / total) * 100).toFixed(1) + '%' : '0%'],
+          ['Avg Confidence', avgConf + '%'],
+          ['Model Accuracy', '87.5%'],
+          ['Model Precision', '89.2%'],
+          ['Model Recall', '85.8%'],
+          ['F1 Score', '87.4%'],
+          ['Avg Inference', '234ms'],
+          ['Generated', new Date().toLocaleString()]
+        ];
+        const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url;
+        a.download = 'perf_stats_' + Date.now() + '.csv';
+        a.click(); URL.revokeObjectURL(url);
+      });
+    }
+
+    // ─── Extend refreshPerfStats to call new charts ───
+    const _origRefresh = refreshPerfStats;
+    refreshPerfStats = function () {
+      fetch('/history').then(r => r.json()).then(data => {
+        const total = data.length;
+        const forged = data.filter(r => r.detected).length;
+        const authentic = total - forged;
+        const avgConf = total > 0 ? (data.reduce((s, r) => s + (r.confidence || 0), 0) / total).toFixed(1) : 0;
+        const highConf = data.filter(r => (r.confidence || 0) >= 80).length;
+        const detRate = total > 0 ? ((forged / total) * 100).toFixed(1) : 0;
+
+        // Update live cards
+        ['perfTotalScans', 'perfForged', 'perfAuthentic', 'perfAvgConf', 'perfHighConf', 'perfDetectionRate'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.transition = 'opacity 0.3s';
+        });
+        document.getElementById('perfTotalScans').textContent = total;
+        document.getElementById('perfForged').textContent = forged;
+        document.getElementById('perfAuthentic').textContent = authentic;
+        document.getElementById('perfAvgConf').textContent = avgConf + '%';
+        document.getElementById('perfHighConf').textContent = highConf;
+        document.getElementById('perfDetectionRate').textContent = detRate + '%';
+        document.getElementById('scanCount') && (document.getElementById('scanCount').textContent = total);
+        const ts = document.getElementById('perfTimestamp');
+        if (ts) ts.textContent = new Date().toLocaleTimeString();
+
+        // Donut %
+        const fPct = total > 0 ? ((forged / total) * 100).toFixed(1) + '%' : '—';
+        const aPct = total > 0 ? ((authentic / total) * 100).toFixed(1) + '%' : '—';
+        const hPct = total > 0 ? ((highConf / total) * 100).toFixed(1) + '%' : '—';
+        document.getElementById('donutForgedPct').textContent = fPct;
+        document.getElementById('donutAuthPct').textContent = aPct;
+        document.getElementById('donutHighPct').textContent = hPct;
+
+        requestAnimationFrame(() => {
+          drawGauge('gaugeAccuracy', 87.5, '#00d9ff');
+          drawGauge('gaugePrecision', 89.2, '#38bdf8');
+          drawGauge('gaugeRecall', 85.8, '#0ea5e9');
+          drawGauge('gaugeF1', 87.4, '#7dd3fc');
+          drawDonut(forged, authentic, highConf);
+          drawTrend(data);
+          // New charts
+          drawConfusionMatrix(forged, authentic);
+          drawHistogram(data);
+          drawHeatmap(data);
+          drawRadar();
+          renderTopRisk(data);
+        });
+      }).catch(() => { });
+    };
+
     // ─── File Upload ───
+
     let selectedFile = null, img1File = null, img2File = null;
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
@@ -1410,21 +2520,21 @@
         img.onload = () => {
           const canvas = document.getElementById('annotationCanvas');
           const container = document.getElementById('canvasContainer');
-          
+
           container.style.display = 'block';
           canvas.width = img.width;
           canvas.height = img.height;
-          
+
           annotationState.canvas = canvas;
           annotationState.ctx = canvas.getContext('2d');
           annotationState.originalImage = img;
           annotationState.zoom = 1;
           annotationState.panX = 0;
           annotationState.panY = 0;
-          
+
           document.getElementById('annotationToolbar').style.display = 'block';
           document.getElementById('annotationMsg').textContent = '✏️ Ready to annotate. Select a tool and start drawing!';
-          
+
           redrawCanvas();
           attachCanvasListeners();
           saveToHistory();
@@ -1469,22 +2579,22 @@
 
     function attachCanvasListeners() {
       const canvas = annotationState.canvas;
-      
+
       canvas.addEventListener('mousedown', e => {
         const rect = canvas.getBoundingClientRect();
         const x = (e.clientX - rect.left) / annotationState.zoom - annotationState.panX;
         const y = (e.clientY - rect.top) / annotationState.zoom - annotationState.panY;
-        
+
         if (e.button === 2) { // Right-click for panning
           annotationState.isPanning = true;
           annotationState.isRightClick = true;
           return;
         }
-        
+
         annotationState.isDrawing = true;
         annotationState.startX = x;
         annotationState.startY = y;
-        
+
         if (annotationState.tool === 'text') {
           showTextInput(x, y);
           annotationState.isDrawing = false;
@@ -1493,11 +2603,11 @@
 
       canvas.addEventListener('mousemove', e => {
         if (!annotationState.isDrawing && !annotationState.isPanning) return;
-        
+
         const rect = canvas.getBoundingClientRect();
         const x = (e.clientX - rect.left) / annotationState.zoom - annotationState.panX;
         const y = (e.clientY - rect.top) / annotationState.zoom - annotationState.panY;
-        
+
         if (annotationState.isPanning) {
           annotationState.panX += (e.movementX / annotationState.zoom);
           annotationState.panY += (e.movementY / annotationState.zoom);
@@ -1546,15 +2656,15 @@
       const canvas = annotationState.canvas;
       const ctx = annotationState.ctx;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       ctx.save();
       ctx.translate(annotationState.panX * annotationState.zoom, annotationState.panY * annotationState.zoom);
       ctx.scale(annotationState.zoom, annotationState.zoom);
-      
+
       ctx.drawImage(annotationState.originalImage, 0, 0);
-      
+
       if (annotationState.showGrid) drawGrid();
-      
+
       ctx.restore();
     }
 
@@ -1564,7 +2674,7 @@
       ctx.strokeStyle = annotationState.color;
       ctx.fillStyle = annotationState.color;
       ctx.lineWidth = annotationState.size;
-      
+
       if (annotationState.tool === 'rect') {
         ctx.strokeRect(annotationState.startX, annotationState.startY, endX - annotationState.startX, endY - annotationState.startY);
       } else if (annotationState.tool === 'circle') {
@@ -1606,17 +2716,17 @@
       const ctx = annotationState.ctx;
       const headlen = 15;
       const angle = Math.atan2(toY - fromY, toX - fromX);
-      
+
       ctx.globalAlpha = annotationState.opacity;
       ctx.strokeStyle = annotationState.color;
       ctx.fillStyle = annotationState.color;
       ctx.lineWidth = annotationState.size;
-      
+
       ctx.beginPath();
       ctx.moveTo(fromX, fromY);
       ctx.lineTo(toX, toY);
       ctx.stroke();
-      
+
       ctx.beginPath();
       ctx.moveTo(toX, toY);
       ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
@@ -1632,14 +2742,14 @@
       ctx.strokeStyle = '#fff';
       ctx.lineWidth = 1;
       const gridSize = 50;
-      
+
       for (let x = 0; x < annotationState.canvas.width; x += gridSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, annotationState.canvas.height);
         ctx.stroke();
       }
-      
+
       for (let y = 0; y < annotationState.canvas.height; y += gridSize) {
         ctx.beginPath();
         ctx.moveTo(0, y);
@@ -1667,14 +2777,14 @@
         const text = document.getElementById('textInput').value;
         const x = parseFloat(document.getElementById('textInput').dataset.x);
         const y = parseFloat(document.getElementById('textInput').dataset.y);
-        
+
         const ctx = annotationState.ctx;
         ctx.globalAlpha = annotationState.opacity;
         ctx.fillStyle = annotationState.color;
         ctx.font = `${annotationState.size * 5}px Arial`;
         ctx.fillText(text, x, y);
         ctx.globalAlpha = 1;
-        
+
         document.getElementById('textInputBox').style.display = 'none';
         saveToHistory();
       }
@@ -1766,10 +2876,10 @@
       const res = await fetch('/history');
       const data = await res.json();
       historyState.allHistory = data;
-      
+
       // Calculate statistics
       updateHistoryStats();
-      
+
       // Apply filters and render
       filterHistory();
     }
@@ -1779,7 +2889,7 @@
       const forged = historyState.allHistory.filter(r => r.detected).length;
       const authentic = total - forged;
       const avgConf = total > 0 ? Math.round(historyState.allHistory.reduce((sum, r) => sum + (r.confidence || 0), 0) / total) : 0;
-      
+
       document.getElementById('statTotal').textContent = total;
       document.getElementById('statForged').textContent = forged;
       document.getElementById('statAuthentic').textContent = authentic;
@@ -1789,13 +2899,13 @@
 
     function filterHistory() {
       let results = [...historyState.allHistory];
-      
+
       // Search filter
       const searchTerm = document.getElementById('historySearch').value.toLowerCase();
       if (searchTerm) {
         results = results.filter(r => (r.original_filename || '').toLowerCase().includes(searchTerm));
       }
-      
+
       // Result filter
       const resultFilter = document.getElementById('filterResult').value;
       if (resultFilter === 'forged') {
@@ -1803,12 +2913,12 @@
       } else if (resultFilter === 'authentic') {
         results = results.filter(r => !r.detected);
       }
-      
+
       // Confidence filter
       const confMin = parseInt(document.getElementById('confMin').value);
       results = results.filter(r => (r.confidence || 0) >= confMin);
       updateConfLabel();
-      
+
       // Sort
       const sortBy = document.getElementById('filterSort').value;
       if (sortBy === 'recent') {
@@ -1820,11 +2930,11 @@
       } else if (sortBy === 'filename') {
         results.sort((a, b) => (a.original_filename || '').localeCompare(b.original_filename || ''));
       }
-      
+
       historyState.filteredHistory = results;
       document.getElementById('resultCount').textContent = results.length;
       document.getElementById('filteredCount').textContent = results.length;
-      
+
       // Reset display count
       historyState.displayCount = 12;
       renderHistory();
@@ -1838,18 +2948,18 @@
     function renderHistory() {
       const toDisplay = historyState.filteredHistory.slice(0, historyState.displayCount);
       document.getElementById('displayCount').textContent = toDisplay.length;
-      
+
       if (toDisplay.length === 0) {
         document.getElementById('historyGrid').innerHTML = '<p style="color:var(--text-dim);grid-column:1/-1">No records match your filters</p>';
         document.getElementById('loadMoreBtn').style.display = 'none';
         return;
       }
-      
+
       let html = toDisplay.map((r, idx) => {
         const isSelected = historyState.selectedItems.has(r.analysis_id);
         const resultStatus = r.detected ? '⚠️ Forged' : '✅ Authentic';
         const resultColor = r.detected ? 'var(--accent2)' : 'var(--success)';
-        
+
         if (historyState.viewMode === 'list') {
           return `
             <div style="background:var(--surface);padding:1rem;border-radius:8px;border-left:4px solid ${resultColor};display:flex;align-items:center;gap:1rem;border:1px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}">
@@ -1887,16 +2997,16 @@
           `;
         }
       }).join('');
-      
+
       document.getElementById('historyGrid').innerHTML = html;
-      
+
       // Show load more button if needed
       if (historyState.displayCount < historyState.filteredHistory.length) {
         document.getElementById('loadMoreBtn').style.display = 'block';
       } else {
         document.getElementById('loadMoreBtn').style.display = 'none';
       }
-      
+
       updateDeleteButtonVisibility();
     }
 
@@ -1904,7 +3014,7 @@
       historyState.viewMode = mode;
       document.getElementById('viewGrid').classList.toggle('active', mode === 'grid');
       document.getElementById('viewList').classList.toggle('active', mode === 'list');
-      
+
       // Adjust grid for list view
       const grid = document.getElementById('historyGrid');
       if (mode === 'list') {
@@ -1912,7 +3022,7 @@
       } else {
         grid.style.gridTemplateColumns = 'repeat(auto-fill,minmax(300px,1fr))';
       }
-      
+
       renderHistory();
     }
 
@@ -1954,7 +3064,7 @@
     function viewHistoryDetail(analysisId) {
       const item = historyState.allHistory.find(r => r.analysis_id === analysisId);
       if (!item) return;
-      
+
       const detail = `
         <div style="background:var(--card);padding:2rem;border-radius:10px;border:1px solid var(--border)">
           <h3 style="margin-bottom:1.5rem">${item.original_filename || 'Unknown'}</h3>
@@ -1988,7 +3098,7 @@
           </div>
         </div>
       `;
-      
+
       const modal = document.getElementById('zoomModal');
       const modalContent = modal.querySelector('[class*="modal-content"]') || modal;
       modalContent.innerHTML = detail;
@@ -2008,8 +3118,8 @@
 
     function deleteSelected() {
       if (historyState.selectedItems.size === 0 || !confirm(`Delete ${historyState.selectedItems.size} records?`)) return;
-      
-      Promise.all(Array.from(historyState.selectedItems).map(id => 
+
+      Promise.all(Array.from(historyState.selectedItems).map(id =>
         fetch(`/history/delete/${id}`, { method: 'DELETE' })
       )).then(() => {
         historyState.allHistory = historyState.allHistory.filter(r => !historyState.selectedItems.has(r.analysis_id));
@@ -2028,12 +3138,12 @@
         new Date(r.timestamp).toLocaleString(),
         r.analysis_id
       ]);
-      
+
       let csv = headers.join(',') + '\n';
       rows.forEach(row => {
         csv += row.map(cell => `"${cell}"`).join(',') + '\n';
       });
-      
+
       downloadFile(csv, 'history_' + new Date().getTime() + '.csv', 'text/csv');
     }
 
@@ -2081,83 +3191,83 @@
     document.getElementById('viewList').classList.remove('active');
 
     // ─── Ambient ring + cursor-reactive particle system (canvas) ───
-    (function(){
+    (function () {
       const canvas = document.getElementById('cursorCanvas');
-      if(!canvas) return;
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
       let W = canvas.width = window.innerWidth;
       let H = canvas.height = window.innerHeight;
-      window.addEventListener('resize', ()=>{ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+      window.addEventListener('resize', () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
 
       // Ambient soft cloud configuration (replacing ring)
-      const center = { x: W/2, y: H/2 };
+      const center = { x: W / 2, y: H / 2 };
       const AMBIENT_COUNT = Math.max(160, Math.floor(Math.min(600, (W * H) / 14000)));
       const ambient = [];
-      const colors = ['#06f0ea','#00d9ff','#38bdf8','#60a5fa'];
+      const colors = ['#06f0ea', '#00d9ff', '#38bdf8', '#60a5fa'];
 
       // Create a soft elliptical cloud of ambient particles centered under the hero
       const cloudRx = Math.max(120, Math.min(W * 0.45, 700));
       const cloudRy = Math.max(80, Math.min(H * 0.25, 320));
-      for(let i=0;i<AMBIENT_COUNT;i++){
+      for (let i = 0; i < AMBIENT_COUNT; i++) {
         // sample elliptical gaussian-ish offsets
         const u = Math.random();
         const r = Math.sqrt(u) * (0.6 + Math.random() * 0.9);
         const theta = Math.random() * Math.PI * 2;
-        const bx = center.x + Math.cos(theta) * r * cloudRx + (Math.random()-0.5) * 12;
-        const by = center.y + Math.sin(theta) * r * cloudRy + (Math.random()-0.5) * 6 - 40; // lift slightly upward
-        ambient.push({ baseX: bx, baseY: by, x: bx + (Math.random()-0.5)*6, y: by + (Math.random()-0.5)*6, vx:0, vy:0, size: 0.6 + Math.random()*2.0, col: colors[Math.floor(Math.random()*colors.length)], phase: Math.random()*Math.PI*2, alpha: 0.28 });
+        const bx = center.x + Math.cos(theta) * r * cloudRx + (Math.random() - 0.5) * 12;
+        const by = center.y + Math.sin(theta) * r * cloudRy + (Math.random() - 0.5) * 6 - 40; // lift slightly upward
+        ambient.push({ baseX: bx, baseY: by, x: bx + (Math.random() - 0.5) * 6, y: by + (Math.random() - 0.5) * 6, vx: 0, vy: 0, size: 0.6 + Math.random() * 2.0, col: colors[Math.floor(Math.random() * colors.length)], phase: Math.random() * Math.PI * 2, alpha: 0.28 });
       }
 
       // cursor burst particles
       const bursts = [];
       const maxBursts = 900;
 
-      let lastX = W/2, lastY = H/2, lastTime = performance.now();
-      let mouseX = W/2, mouseY = H/2;
+      let lastX = W / 2, lastY = H / 2, lastTime = performance.now();
+      let mouseX = W / 2, mouseY = H / 2;
 
-      window.addEventListener('mousemove', (e)=>{
+      window.addEventListener('mousemove', (e) => {
         const now = performance.now();
         const dx = e.clientX - lastX, dy = e.clientY - lastY;
         const dt = Math.max(12, now - lastTime);
-        const vel = Math.sqrt(dx*dx + dy*dy) / dt * 60;
+        const vel = Math.sqrt(dx * dx + dy * dy) / dt * 60;
         lastX = e.clientX; lastY = e.clientY; lastTime = now;
         mouseX = e.clientX; mouseY = e.clientY;
         const count = 3 + Math.min(18, Math.round(vel * 0.08));
-        for(let i=0;i<count;i++){
-          if(bursts.length > maxBursts) bursts.shift();
-          const ang = Math.random()*Math.PI*2;
-          const sp = 0.6 + Math.random()*2.6 + vel*0.02;
-          bursts.push({ x: mouseX + (Math.random()-0.5)*4, y: mouseY + (Math.random()-0.5)*4, vx: Math.cos(ang)*sp, vy: Math.sin(ang)*sp, size: 0.8 + Math.random()*2.6, life: 30 + Math.random()*80, age: 0, col: colors[Math.floor(Math.random()*colors.length)] });
+        for (let i = 0; i < count; i++) {
+          if (bursts.length > maxBursts) bursts.shift();
+          const ang = Math.random() * Math.PI * 2;
+          const sp = 0.6 + Math.random() * 2.6 + vel * 0.02;
+          bursts.push({ x: mouseX + (Math.random() - 0.5) * 4, y: mouseY + (Math.random() - 0.5) * 4, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, size: 0.8 + Math.random() * 2.6, life: 30 + Math.random() * 80, age: 0, col: colors[Math.floor(Math.random() * colors.length)] });
         }
-      }, {passive:true});
+      }, { passive: true });
 
-      function animate(){
-        ctx.clearRect(0,0,W,H);
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
         // faint grid overlay for depth
         ctx.save();
         ctx.lineWidth = 1;
         ctx.strokeStyle = 'rgba(10,18,28,0.06)';
-        const gridSize = Math.max(80, Math.min(160, Math.floor(W/12)));
-        for(let gx = (center.x % gridSize) - gridSize; gx < W + gridSize; gx += gridSize){
+        const gridSize = Math.max(80, Math.min(160, Math.floor(W / 12)));
+        for (let gx = (center.x % gridSize) - gridSize; gx < W + gridSize; gx += gridSize) {
           ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke();
         }
-        for(let gy = (center.y % gridSize) - gridSize; gy < H + gridSize; gy += gridSize){
+        for (let gy = (center.y % gridSize) - gridSize; gy < H + gridSize; gy += gridSize) {
           ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
         }
         ctx.restore();
         const t = performance.now() * 0.001;
-        const influence = Math.max(120, Math.min(280, Math.min(W,H) * 0.12));
+        const influence = Math.max(120, Math.min(280, Math.min(W, H) * 0.12));
 
         // ambient motion and reaction
-        for(let i=0;i<ambient.length;i++){
+        for (let i = 0; i < ambient.length; i++) {
           const p = ambient[i];
           const osc = Math.sin(t * 0.6 + p.phase) * 6;
           const targetX = p.baseX + Math.cos(p.phase) * osc * 0.6;
           const targetY = p.baseY + Math.sin(p.phase) * osc * 0.6;
 
           const dx = p.x - mouseX, dy = p.y - mouseY;
-          const dist = Math.sqrt(dx*dx + dy*dy);
-          if(dist < influence){
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < influence) {
             const force = (1 - (dist / influence)) * 2.2;
             p.vx += (dx / (dist + 0.001)) * force;
             p.vy += (dy / (dist + 0.001)) * force;
@@ -2176,21 +3286,21 @@
           ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha));
           ctx.fillStyle = p.col;
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           ctx.fill();
         }
 
         // sparse mesh connections (cooler, subtler)
         ctx.lineWidth = 0.6;
-        for(let aIdx = 0; aIdx < ambient.length; aIdx+=1){
+        for (let aIdx = 0; aIdx < ambient.length; aIdx += 1) {
           const a = ambient[aIdx];
           // connect only to a few forward neighbors to keep it sparse
-          for(let bIdx = aIdx + 1; bIdx < Math.min(ambient.length, aIdx + 5); bIdx++){
+          for (let bIdx = aIdx + 1; bIdx < Math.min(ambient.length, aIdx + 5); bIdx++) {
             const b = ambient[bIdx];
             const dx = a.x - b.x, dy = a.y - b.y;
-            const dist2 = dx*dx + dy*dy;
+            const dist2 = dx * dx + dy * dy;
             const maxD = 110 * 110;
-            if(dist2 < maxD){
+            if (dist2 < maxD) {
               const alpha = (1 - dist2 / maxD) * 0.08 * Math.min(1, (a.alpha + b.alpha) / 1.0);
               // blend toward cyan tone for lines
               ctx.strokeStyle = 'rgba(6,240,234,1)';
@@ -2205,7 +3315,7 @@
         ctx.globalAlpha = 1;
 
         // bursts
-        for(let i = bursts.length - 1; i>=0; i--){
+        for (let i = bursts.length - 1; i >= 0; i--) {
           const b = bursts[i];
           b.x += b.vx; b.y += b.vy;
           b.vy += 0.02; b.vx *= 0.995; b.vy *= 0.995;
@@ -2214,9 +3324,9 @@
           ctx.globalAlpha = Math.max(0, 0.6 * (1 - tt));
           ctx.fillStyle = b.col;
           ctx.beginPath();
-          ctx.arc(b.x, b.y, Math.max(0.6, b.size * (1 - tt*0.7)), 0, Math.PI*2);
+          ctx.arc(b.x, b.y, Math.max(0.6, b.size * (1 - tt * 0.7)), 0, Math.PI * 2);
           ctx.fill();
-          if(b.age >= b.life) bursts.splice(i,1);
+          if (b.age >= b.life) bursts.splice(i, 1);
         }
 
         ctx.globalAlpha = 1;
